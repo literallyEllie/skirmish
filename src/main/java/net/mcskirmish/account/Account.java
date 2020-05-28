@@ -1,6 +1,7 @@
 package net.mcskirmish.account;
 
 import com.google.common.collect.Lists;
+import net.mcskirmish.util.F;
 import org.bson.Document;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -139,6 +140,32 @@ public class Account {
 
         player.setDisplayName(rank.getPrefix() + (rank.isDefault() ? "" : " ") + getName());
     }
+
+    public void sendMessage(String message) {
+        if (player == null) return;
+
+        player.sendMessage(F.f(message));
+    }
+
+    public void sendMessage(String... message) {
+        if (player == null) return;
+
+        for (String str : message) {
+            sendMessage(message);
+        }
+    }
+
+    public void sendMessage(String message, String prefix, ChatColor prefixColor) {
+        sendMessage(ChatColor.BOLD + "" + prefixColor + prefix.toUpperCase() + " " + ChatColor.RESET + message);
+    }
+
+    public void sendMessage(String prefix, ChatColor prefixColor, String... message) {
+       for (String str : message) {
+           sendMessage(str, prefix, prefixColor);
+       }
+    }
+
+    //TODO ADD A POLICY FOR PREFIXES.
 
     /*
     public long getLastUse(String key) {

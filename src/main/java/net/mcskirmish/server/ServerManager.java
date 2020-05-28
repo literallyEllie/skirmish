@@ -25,17 +25,17 @@ public class ServerManager extends Module {
     @Override
     protected void start() {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(PATH_MIN_RANK)))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(PATH_SERVER_ID)))) {
             serverId = reader.readLine();
         } catch (IOException e) {
-            plugin.error("failed to read server id", e);
+            plugin.error("Failed to read server ID file!", e);
         }
 
         // min rank
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(PATH_MIN_RANK)))) {
             minRank = Rank.valueOf(reader.readLine());
         } catch (IOException e) {
-            plugin.error("failed to read min rank", e);
+            plugin.error("Failed to read from min rank file!", e);
         }
 
     }

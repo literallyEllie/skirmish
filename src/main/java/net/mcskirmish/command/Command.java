@@ -1,8 +1,6 @@
 package net.mcskirmish.command;
 
 import com.google.common.collect.Lists;
-import com.sun.deploy.panel.RuleSetViewerDialog;
-import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;

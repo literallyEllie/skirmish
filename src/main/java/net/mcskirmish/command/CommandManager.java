@@ -3,6 +3,7 @@ package net.mcskirmish.command;
 import com.google.common.collect.Lists;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
+import net.mcskirmish.command.commands.CommandTest;
 import net.mcskirmish.util.UtilReflect;
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
@@ -23,6 +24,7 @@ public class CommandManager extends Module {
     @Override
     protected void start() {
         localCommands = Lists.newArrayList();
+        registerCommands(new CommandTest(plugin));
 
         try {
             commandMap = (CommandMap) UtilReflect.getField(Server.class, "commandMap", plugin.getServer());

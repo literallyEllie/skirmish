@@ -29,6 +29,7 @@ public class ChatManager extends Module {
 
         e.setFormat(e.getPlayer().getDisplayName() + ": " + ChatColor.RESET + " %s");
         //TODO PROVIDE AN OPTION TO MAKE IT SO ANY SERVER CAN SET WHAT THE CHAT LOOKS LIKE
+        //TODO UTILIZE CHAT POLICY IM TOO TIRED RN LOL
     }
 
     public ChatPolicy getChatPolicy() {
