@@ -2,6 +2,7 @@ package net.mcskirmish;
 
 import com.google.common.collect.Lists;
 import net.mcskirmish.account.AccountManager;
+import net.mcskirmish.chat.ChatManager;
 import net.mcskirmish.mongo.MongoManager;
 import net.mcskirmish.redis.RedisManager;
 import org.bukkit.event.Listener;
@@ -17,6 +18,7 @@ public abstract class SkirmishPlugin extends JavaPlugin {
     private MongoManager mongoManager;
     private RedisManager redisManager;
     private AccountManager accountManager;
+    private ChatManager chatManager;
 
     private boolean isLocalServer, isDevServer, isNetworkingServer;
     private long serverStart, startupTime;
@@ -34,6 +36,7 @@ public abstract class SkirmishPlugin extends JavaPlugin {
         mongoManager = new MongoManager(this);
         redisManager = new RedisManager(this);
         accountManager = new AccountManager(this);
+        chatManager = new ChatManager(this);
 
         // startup underlying
         try {
@@ -86,6 +89,10 @@ public abstract class SkirmishPlugin extends JavaPlugin {
 
     public AccountManager getAccountManager() {
         return accountManager;
+    }
+
+    public ChatManager getChatManager() {
+        return this.chatManager;
     }
 
     public boolean isLocalServer() {
