@@ -2,8 +2,10 @@ package net.mcskirmish.account;
 
 import com.google.common.collect.Lists;
 import org.bson.Document;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import javax.swing.plaf.SplitPaneUI;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -16,9 +18,11 @@ public class Account {
             PREV_NAMES = "prev_names",
             FIRST_LOGIN = "first_login",
             LAST_LOGIN = "last_login",
+            FIRST_TIME = "first_time",
             IPS = "ips",
             RANK = "rank",
-    LAST_USE = "last_use";
+            LAST_USE = "last_use",
+            LAST_SERVER = "last_server";
 
     private final AccountManager accountManager;
     private final Document document;
@@ -74,7 +78,7 @@ public class Account {
 
     public void setPlayer(Player player) {
         this.player = player;
-        // update display
+        setDisplay();
     }
 
     public UUID getUuid() {
@@ -105,16 +109,35 @@ public class Account {
         return document.getLong(LAST_LOGIN);
     }
 
+    public boolean isFirstTime() {
+        return document.getBoolean(FIRST_TIME);
+    }
+
     public List<String> getIPs() {
         return document.getList(IPS, String.class);
     }
 
     public Rank getRank() {
-        return Rank.valueOf(document.getString(RANK));
+        try {
+            return Rank.valueOf(document.getString(RANK));
+        } catch (IllegalArgumentException e) {
+            System.out.println(getUuid() + " has invalid rank (" + document.getString(RANK) + ")");
+            setRank(Rank.PLAYER);
+        }
+        return Rank.PLAYER;
     }
 
     public void setRank(Rank rank) {
         set(RANK, rank.toString());
+        setDisplay();
+    }
+
+    public void setDisplay() {
+        if (player == null)
+            return;
+        final Rank rank = getRank();
+
+        player.setDisplayName(rank.getPrefix() + (rank.isDefault() ? "" : " ") + getName());
     }
 
     /*

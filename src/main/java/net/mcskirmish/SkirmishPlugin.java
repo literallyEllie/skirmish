@@ -3,8 +3,10 @@ package net.mcskirmish;
 import com.google.common.collect.Lists;
 import net.mcskirmish.account.AccountManager;
 import net.mcskirmish.chat.ChatManager;
+import net.mcskirmish.command.CommandManager;
 import net.mcskirmish.mongo.MongoManager;
 import net.mcskirmish.redis.RedisManager;
+import net.mcskirmish.server.ServerManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,10 +19,12 @@ public abstract class SkirmishPlugin extends JavaPlugin {
     private final Collection<Module> modules = Lists.newArrayList();
     private MongoManager mongoManager;
     private RedisManager redisManager;
+    private ServerManager serverManager;
     private AccountManager accountManager;
+    private CommandManager commandManager;
     private ChatManager chatManager;
 
-    private boolean isLocalServer, isDevServer, isNetworkingServer;
+    private boolean isLocalServer, isDevServer, isNetworkingServer, isLobbyServer;
     private long serverStart, startupTime;
 
     @Override
@@ -31,11 +35,14 @@ public abstract class SkirmishPlugin extends JavaPlugin {
         isLocalServer = new File("LOCAL").exists();
         isDevServer = new File("DEV").exists();
         isNetworkingServer = new File("NETWORKING").exists();
+        isLobbyServer = new File("LOBBY").exists();
 
         // start modules
         mongoManager = new MongoManager(this);
         redisManager = new RedisManager(this);
+        serverManager = new ServerManager(this);
         accountManager = new AccountManager(this);
+        commandManager = new CommandManager(this);
         chatManager = new ChatManager(this);
 
         // startup underlying
@@ -60,6 +67,13 @@ public abstract class SkirmishPlugin extends JavaPlugin {
         }
 
         // disable modules
+        modules.forEach(module -> {
+            try {
+                module.stop();
+            } catch (Throwable e) {
+                error("failed to stop module " + module.getName(), e);
+            }
+        });
 
         // finish disable
         log(getDescription().getName() + "v " + getDescription().getVersion() + " disabled.");
@@ -87,8 +101,16 @@ public abstract class SkirmishPlugin extends JavaPlugin {
         return redisManager;
     }
 
+    public ServerManager getServerManager() {
+        return serverManager;
+    }
+
     public AccountManager getAccountManager() {
         return accountManager;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
     public ChatManager getChatManager() {
@@ -105,6 +127,10 @@ public abstract class SkirmishPlugin extends JavaPlugin {
 
     public boolean isNetworkingServer() {
         return isNetworkingServer;
+    }
+
+    public boolean isLobbyServer() {
+        return isLobbyServer;
     }
 
     public long getServerStart() {

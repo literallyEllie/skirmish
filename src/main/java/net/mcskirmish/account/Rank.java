@@ -4,21 +4,21 @@ import org.bukkit.ChatColor;
 
 public enum Rank {
 
-    PLAYER("Player", ChatColor.WHITE, ChatColor.WHITE, false, 0),
-    ADMIN("Admin", ChatColor.RED, ChatColor.WHITE, true, 1),
-    OWNER("Owner", ChatColor.DARK_RED, ChatColor.WHITE, true, Integer.MAX_VALUE);
+    PLAYER("Player", ChatColor.WHITE),
+    ADMIN("Admin", ChatColor.RED),
+    OWNER("Owner", ChatColor.DARK_RED);
 
-    private String name;
-    private ChatColor rankColor, userColor; // TODO Maybe make rank colour or user colour optional?
-    private boolean hasPrefix;
-    private int permissionLevel;
+    private final String name;
+    private final ChatColor rankColor, chatColor; // TODO Maybe make rank colour or user colour optional?
 
-    Rank(String name, ChatColor rankColor, ChatColor userColor, boolean hasPrefix, int permissionLevel) {
+    Rank(String name, ChatColor rankColor, ChatColor userColor) {
         this.name = name;
         this.rankColor = rankColor;
-        this.userColor = userColor;
-        this.hasPrefix = hasPrefix;
-        this.permissionLevel = permissionLevel;
+        this.chatColor = userColor;
+    }
+
+    Rank(String name, ChatColor rankColor) {
+        this(name, rankColor, ChatColor.WHITE);
     }
 
     public String getName() {
@@ -29,20 +29,26 @@ public enum Rank {
         return this.rankColor;
     }
 
-    public ChatColor getUserColor() {
-        return this.userColor;
+    public ChatColor getChatColor() {
+        return chatColor;
     }
 
-    public boolean hasPrefix() {
-        return this.hasPrefix;
+    public boolean isDefault() {
+        return this == PLAYER;
     }
 
-    public int getPermissionLevel() {
-        return permissionLevel;
+    public boolean isStaff() {
+        return isHigherOrEqualTo(ADMIN);
     }
 
     public String getPrefix() {
-        if (!hasPrefix) return null;
-        return getRankColor() + "[" + getName() + "]" + getUserColor();
+        return (isDefault()
+                ? ""
+                : getRankColor() + "[" + getName() + "]") + getChatColor();
     }
+
+    public boolean isHigherOrEqualTo(Rank rank) {
+        return this.ordinal() >= rank.ordinal();
+    }
+
 }

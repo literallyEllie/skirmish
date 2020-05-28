@@ -4,8 +4,9 @@ import com.google.common.collect.Maps;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.mongo.table.AccountsRepository;
-import net.mcskirmish.util.D;
+import net.mcskirmish.util.Domain;
 import net.mcskirmish.util.UtilPlayer;
+import net.mcskirmish.util.UtilTime;
 import org.bson.Document;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -14,13 +15,15 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class AccountManager extends Module {
+
+    private static final String FAIL_LOG = "DB_FAILS.txt";
 
     private final Object loadLock = new Object();
     private AccountsRepository repo;
@@ -33,7 +36,7 @@ public class AccountManager extends Module {
     @Override
     protected void start() {
         accounts = Maps.newHashMap();
-        repo = new AccountsRepository();
+        repo = new AccountsRepository(plugin);
     }
 
     @EventHandler
@@ -62,8 +65,8 @@ public class AccountManager extends Module {
 
             account.set(Account.LAST_LOGIN, System.currentTimeMillis());
             List<String> pNames = account.getPreviousNames();
-            List<String> ips = account.getIPs();
 
+            // update names
             if (!newAccount && !name.equals(account.get(Account.NAME))) {
                 account.set(Account.NAME, name);
                 account.set(Account.NAME_LOWER, name.toLowerCase());
@@ -74,37 +77,48 @@ public class AccountManager extends Module {
                 }
             }
 
+            // update ips
+            List<String> ips = account.getIPs();
             if (!ips.contains(ip)) {
                 ips.add(ip);
                 account.set(Account.IPS, ips);
             }
-            // TODO first time local var
 
-            // if all gucci
+            // check can join
+            final Rank minRank = plugin.getServerManager().getMinRank();
+            if (account.getRank().ordinal() < minRank.ordinal()) {
+                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+                        ChatColor.RED + "You only " + minRank.getPrefix() + ChatColor.RED + "+ can join this server :(");
+                return;
+            }
+
+            // Set first time
+            account.set(Account.FIRST_TIME, true, null, false);
+            account.set(Account.LAST_SERVER, plugin.getServerManager().getServerId());
+
             accounts.put(uuid, account);
             if (newAccount) {
                 Account finalAccount = account;
-                runAsync(() -> repo.insert(repo.getCollection(plugin), finalAccount.getDocument()));
-            } else {
-
+                runAsync(() -> repo.insert(finalAccount.getDocument()));
             }
-
         }
 
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        event.setJoinMessage(null);
+
         final Player player = event.getPlayer();
         final Account account = getAccount(player);
 
-        if (account == null || account.getRank() == null) { // account.getRank() in case we delete a rank or set it to an invalid rank.
-            player.kickPlayer(ChatColor.RED + "Sorry! There was an error loading your data. Join our Discord for support www.discord.gg/potato");
+        if (account == null) {
+            player.kickPlayer(ChatColor.RED + "Sorry! There was an error loading your data." +
+                    "\nJoin our Discord for support " + Domain.DISCORD);
             return;
         }
 
         account.setPlayer(player);
-        event.setJoinMessage(null);
     }
 
     @EventHandler
@@ -117,14 +131,34 @@ public class AccountManager extends Module {
         return getAccount(player.getUniqueId(), false);
     }
 
-    public Account getAccount(UUID uuid, boolean db) {
-        if (!db || accounts.containsKey(uuid))
+    public Account getAccount(UUID uuid, boolean database) {
+        if (accounts.containsKey(uuid))
             return accounts.get(uuid);
 
-        // TODO make accessing repo cleaner
-        final Document query = repo.query(repo.getCollection(plugin), Account.ID, uuid);
-        if (query != null) {
-            return new Account(this, query);
+        if (database) {
+            final Document account = repo.query(Account.ID, uuid);
+            if (account != null) {
+                return new Account(this, account);
+            }
+        }
+
+        return null;
+    }
+
+    public Account getAccount(String name, boolean database) {
+        String nameLower = name.toLowerCase();
+
+        final Optional<Account> localAccount = accounts.values().stream()
+                .filter(account -> account.getNameLower().equals(nameLower))
+                .findFirst();
+        if (localAccount.isPresent())
+            return localAccount.get();
+
+        if (database) {
+            final Document account = repo.query(Account.NAME_LOWER, nameLower);
+            if (account != null) {
+                return new Account(this, account);
+            }
         }
 
         return null;
@@ -133,14 +167,35 @@ public class AccountManager extends Module {
     public void updateAccount(Account account, String key, Object attribute, Consumer<Boolean> callback) {
         if (key != null && attribute != null) {
             runAsync(() -> {
-                D.d("updating " + account.getUuid());
-                repo.update(repo.getCollection(plugin), Account.ID, account.getUuid(), key, attribute);
+                final boolean success = repo.update(Account.ID, account.getUuid(), key, attribute);
 
                 if (callback != null)
-                    callback.accept(true);
+                    callback.accept(success);
+
+                if (!success) {
+                    logDbError(UtilTime.fullDate() + " FAILED UPDATE " + key + ": " + attribute);
+                }
             });
 
         }
+    }
+
+    private void logDbError(String description) {
+        File file = new File(FAIL_LOG);
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter writer = new FileWriter(file, true);
+            writer.write(description + System.lineSeparator());
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            plugin.error("error writing update log", e);
+        }
+
     }
 
 }

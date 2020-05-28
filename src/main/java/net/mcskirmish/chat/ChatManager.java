@@ -10,20 +10,33 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class ChatManager extends Module {
 
+    private ChatPolicy chatPolicy;
+
     public ChatManager(SkirmishPlugin plugin) {
         super(plugin);
     }
 
     @Override
     protected void start() {
+        chatPolicy = new ChatPolicy();
+
 
     }
 
     @EventHandler
-    public void chat(AsyncPlayerChatEvent e) {
+    public void onChat(AsyncPlayerChatEvent e) {
         Account account = plugin.getAccountManager().getAccount(e.getPlayer());
-        Rank rank = account.getRank();
-        e.setFormat((rank.hasPrefix() ? rank.getPrefix() : "") + account.getName() + ":" + ChatColor.RESET + " %s");
+
+        e.setFormat(e.getPlayer().getDisplayName() + ": " + ChatColor.RESET + " %s");
         //TODO PROVIDE AN OPTION TO MAKE IT SO ANY SERVER CAN SET WHAT THE CHAT LOOKS LIKE
     }
+
+    public ChatPolicy getChatPolicy() {
+        return chatPolicy;
+    }
+
+    public void setChatPolicy(ChatPolicy chatPolicy) {
+        this.chatPolicy = chatPolicy;
+    }
+
 }
