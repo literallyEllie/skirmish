@@ -14,6 +14,8 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -54,13 +56,32 @@ public class AccountManager extends Module {
             }
 
             account.set(Account.LAST_LOGIN, System.currentTimeMillis());
-            // todo, update ips, update name, first time local var
+            List<String> pNames = account.getPreviousNames();
+            List<String> ips = account.getIPs();
+
+            if (!newAccount && !name.equals(account.get(Account.NAME))) {
+                account.set(Account.NAME, name);
+                account.set(Account.NAME_LOWER, name.toLowerCase());
+
+                if (!pNames.contains(name)) {
+                    pNames.add(name);
+                    account.set(Account.PREV_NAMES, pNames);
+                }
+            }
+
+            if (!ips.contains(ip)) {
+                ips.add(ip);
+                account.set(Account.IPS, ips);
+            }
+            // TODO first time local var
 
             // if all gucci
             accounts.put(uuid, account);
             if (newAccount) {
                 Account finalAccount = account;
                 runAsync(() -> repo.insert(repo.getCollection(plugin), finalAccount.getDocument()));
+            } else {
+
             }
 
         }
