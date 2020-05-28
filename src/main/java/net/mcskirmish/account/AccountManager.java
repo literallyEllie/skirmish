@@ -42,6 +42,11 @@ public class AccountManager extends Module {
         final String name = event.getName();
         final String ip = event.getAddress().getHostAddress();
 
+        if (name.contains(" ")) { // This actually exists! Search 'Daniel B' for an example.
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, ChatColor.RED + "Your name contains an invalid character!");
+            return;
+        }
+
         if (UtilPlayer.getP(uuid) != null || UtilPlayer.getPExact(name) != null) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatColor.RED + "You are already connected!");
             return;
@@ -93,17 +98,19 @@ public class AccountManager extends Module {
         final Player player = event.getPlayer();
         final Account account = getAccount(player);
 
-        if (account == null) {
+        if (account == null || account.getRank() == null) { // account.getRank() in case we delete a rank or set it to an invalid rank.
             player.kickPlayer(ChatColor.RED + "Sorry! There was an error loading your data. Join our Discord for support www.discord.gg/potato");
             return;
         }
 
         account.setPlayer(player);
+        event.setJoinMessage(null);
     }
 
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
         accounts.remove(event.getPlayer().getUniqueId());
+        event.setQuitMessage(null);
     }
 
     public Account getAccount(Player player) {
