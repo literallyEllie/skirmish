@@ -1,0 +1,68 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version '5.2.0'
+}
+
+group 'network.skirmish'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+
+    /* Spigot */
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+    /* Waterfall (Proxy) */
+    maven { url 'https://papermc.io/repo/repository/maven-snapshots/' }
+
+    /* Bundled Libs */
+    /* ParticleAPI */
+    maven { url 'https://repo.inventivetalent.org/content/groups/public/' }
+
+    /* Ext. Plugin Libs*/
+    /* Citizens */
+    maven { url 'http://repo.citizensnpcs.co/' }
+    /* Holographic Displays */
+    maven { url 'https://repo.codemc.io/repository/maven-public/' }
+
+}
+
+dependencies {
+    /* Provided Libs */
+    /* Spigot */
+    compileOnly(group: 'org.spigotmc', name: 'spigot-api', version: '1.8.8-R0.1-SNAPSHOT') {
+        exclude group: 'net.md-5'
+        exclude group: 'org.avaje'
+    }
+    /* Waterfall */
+    compileOnly group: 'io.github.waterfallmc', name: 'waterfall-api', version: '1.15-SNAPSHOT'
+
+    /* Backend Structure */
+    /* Jedis */
+    compile group: 'redis.clients', name: 'jedis', version: '3.3.0'
+    /* MongoDB */
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.4'
+
+    /* Bundled Libs */
+    /* Pretty Time */
+    compile group: 'org.ocpsoft.prettytime', name: 'prettytime', version: '4.0.5.Final'
+    /* 2FA Auth */
+    compile group: 'com.warrenstrange', name: 'googleauth', version: '1.5.0'
+    /* Particle API*/
+    compile group: 'org.inventivetalent', name: 'particleapi', version: '2.1.2'
+
+    /* Ext. Plugin Libs */
+    /* Citizens */
+    compileOnly(group: 'net.citizensnpcs', name: 'citizens', version: '2.0.25-SNAPSHOT') {
+        exclude group: 'net.sf.trove4j'
+        exclude group: 'org.bstats'
+    }
+    /* Holographic Displays */
+    compileOnly group: 'com.gmail.filoghost.holographicdisplays', name: 'holographicdisplays-api', version: '2.4.0'
+}
+
+shadowJar {
+    archiveName = "Skirmish-${version}.jar"
+}

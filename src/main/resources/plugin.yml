@@ -1,0 +1,4 @@
+name: Skirmish
+main: net.mcskirmish.DummyPlugin
+version: 1.0
+author: Skirmish Development Team
