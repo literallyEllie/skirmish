@@ -76,7 +76,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
         } catch (Throwable throwable) {
             plugin.error("error executing command " + getLabel(), throwable);
             sender.sendMessage(ChatColor.RED + "There was an error executing that command, report to a member of staff");
-            return true;
+            return false;
         }
 
         return true;
@@ -92,10 +92,22 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
         return Lists.newArrayList();
     }
 
+    public void msg(CommandSender sender, String message) {
+        sender.sendMessage(message);
+    }
+
+    public void msg(Account account, String message) {
+        account.sendMessage(message);
+    }
+
     protected Account getAccount(CommandSender sender) {
         return sender instanceof Player
                 ? plugin.getAccountManager().getAccount((Player) sender)
                 : null;
+    }
+
+    protected Account getAccount(String name) {
+        return plugin.getAccountManager().getAccount(name, true);
     }
 
     protected boolean checkArgs(CommandSender commandSender, String command, String[] args) {
@@ -109,12 +121,12 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
 
     public void usage(CommandSender sender, String aliasUsed) {
         // TODO usage
-        sender.sendMessage("Usage");
+        msg(sender, "Usage: ");
     }
 
     public void couldNotFind(CommandSender sender, String thing) {
         // TODO
-        sender.sendMessage("Could not find " + thing);
+        msg(sender, "Could not find " + thing);
     }
 
     public Player getPlayer(CommandSender sender, String name) {

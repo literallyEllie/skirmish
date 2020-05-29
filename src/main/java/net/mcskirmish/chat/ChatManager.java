@@ -1,14 +1,16 @@
 package net.mcskirmish.chat;
 
+import net.mcskirmish.IInteractive;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
+import net.mcskirmish.util.Prefix;
 import net.md_5.bungee.event.EventHandler;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-public class ChatManager extends Module {
+public class ChatManager extends Module implements IInteractive {
 
     private ChatPolicy chatPolicy;
 
@@ -38,6 +40,11 @@ public class ChatManager extends Module {
 
     public void setChatPolicy(ChatPolicy chatPolicy) {
         this.chatPolicy = chatPolicy;
+    }
+
+    @Override
+    public String getPrefix() {
+        return Prefix.CHAT;
     }
 
 }

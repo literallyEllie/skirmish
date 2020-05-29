@@ -16,16 +16,12 @@ public class CommandTest extends Command {
 
     public CommandTest(SkirmishPlugin plugin) {
         super(plugin, "Test", "A simple test command.", Rank.ADMIN, Arrays.asList("test", "tst"), "/tst", "/test");
-    }
 
-    // Is this actually comitting wtf
+        requiresPlayer();
+    }
 
     @Override
     public void run(CommandSender sender, Account account, String usedLabel, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(F.f("&cThis command is being ran by CONSOLE!"));
-            return;
-        }
 
         account.sendMessage("TEST", ChatColor.YELLOW, "This is simply a test command...", "nothing much...");
     }

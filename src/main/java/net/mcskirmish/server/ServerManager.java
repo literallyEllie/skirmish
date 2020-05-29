@@ -1,14 +1,10 @@
 package net.mcskirmish.server;
 
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Rank;
-import net.mcskirmish.util.UtilJson;
 
 import java.io.*;
-import java.util.Map;
 
 public class ServerManager extends Module {
 
@@ -28,14 +24,14 @@ public class ServerManager extends Module {
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(PATH_SERVER_ID)))) {
             serverId = reader.readLine();
         } catch (IOException e) {
-            plugin.error("Failed to read server ID file!", e);
+            plugin.error("failed to read server id file", e);
         }
 
         // min rank
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(PATH_MIN_RANK)))) {
             minRank = Rank.valueOf(reader.readLine());
         } catch (IOException e) {
-            plugin.error("Failed to read from min rank file!", e);
+            plugin.error("failed to read from min rank file", e);
         }
 
     }

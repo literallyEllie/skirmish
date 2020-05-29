@@ -15,9 +15,9 @@ public abstract class Module implements Listener {
         this.name = getClass().getSimpleName();
 
         try {
-             start();
+            start();
 
-             plugin.registerModule(this);
+            plugin.registerModule(this);
         } catch (Throwable throwable) {
             plugin.error("error enabling module " + name, throwable);
         }

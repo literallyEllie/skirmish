@@ -7,8 +7,8 @@ import org.bson.Document;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Updates.*;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 
 public class MongoRepository {
 
@@ -44,8 +44,8 @@ public class MongoRepository {
 
     public void batchUpdate(String index, Object indexQuery, Map<String, Object> updates) {
         getCollection().updateMany(eq(index, indexQuery), updates.entrySet().stream()
-                        .map(stringObjectEntry -> set(stringObjectEntry.getKey(), stringObjectEntry.getValue()))
-                        .collect(Collectors.toList()));
+                .map(stringObjectEntry -> set(stringObjectEntry.getKey(), stringObjectEntry.getValue()))
+                .collect(Collectors.toList()));
     }
 
     public void insert(Document document) {

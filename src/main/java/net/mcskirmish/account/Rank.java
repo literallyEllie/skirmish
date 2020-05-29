@@ -2,6 +2,9 @@ package net.mcskirmish.account;
 
 import org.bukkit.ChatColor;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum Rank {
 
     PLAYER("Player", ChatColor.WHITE),
@@ -19,6 +22,13 @@ public enum Rank {
 
     Rank(String name, ChatColor rankColor) {
         this(name, rankColor, ChatColor.WHITE);
+    }
+
+    public static Optional<Rank> fromString(String string) {
+        String upper = string.toUpperCase();
+        return Arrays.stream(values())
+                .filter(rank -> rank.name().equals(upper) || rank.getName().toUpperCase().equals(upper))
+                .findFirst();
     }
 
     public String getName() {
@@ -42,9 +52,9 @@ public enum Rank {
     }
 
     public String getPrefix() {
-        return (isDefault()
+        return getRankColor() + (isDefault()
                 ? ""
-                : getRankColor() + "[" + getName() + "]") + getChatColor();
+                : "[" + getName() + "]") + getChatColor();
     }
 
     public boolean isHigherOrEqualTo(Rank rank) {

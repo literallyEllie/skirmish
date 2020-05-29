@@ -13,7 +13,8 @@ public class UtilJson {
 
     static {
         GSON = new Gson();
-        GENERIC_CONF_TOKEN = new TypeToken<Map<String, String>>(){};
+        GENERIC_CONF_TOKEN = new TypeToken<Map<String, String>>() {
+        };
     }
 
     public static <T> T fromFile(JsonReader reader, TypeToken<T> token) {

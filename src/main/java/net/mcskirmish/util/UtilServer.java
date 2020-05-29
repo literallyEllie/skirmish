@@ -12,4 +12,11 @@ public class UtilServer {
         return Bukkit.getMaxPlayers();
     }
 
+    public static void broadcast(String string) {
+        // TODO
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage("");
+    }
+
 }

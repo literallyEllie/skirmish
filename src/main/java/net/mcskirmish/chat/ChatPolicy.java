@@ -2,6 +2,7 @@ package net.mcskirmish.chat;
 
 import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;
+import net.mcskirmish.util.UtilServer;
 import org.bukkit.ChatColor;
 
 public class ChatPolicy {
@@ -12,7 +13,7 @@ public class ChatPolicy {
 
     public ChatPolicy() {
         this.format = "{display}" + ChatColor.DARK_GRAY + "> {message}";
-        this.chatDelay = 3;
+        this.chatDelay = 1;
         this.requiredRank = Rank.PLAYER;
     }
 
@@ -34,18 +35,28 @@ public class ChatPolicy {
 
     public void setChatDelay(String executorName, boolean silent, int delay) {
         if (!silent) {
-            //TODO SEND A MESSAGE.
+            // todo
+            UtilServer.broadcast("..");
         }
 
         this.chatDelay = delay;
     }
 
+    public boolean hasChatDelay() {
+        return chatDelay > 0;
+    }
+
     public void setRequiredRank(String executorName, boolean silent, Rank rank) {
         if (!silent) {
-            //TODO SEND A MESSAGE.
+            // todo
+            UtilServer.broadcast("..");
         }
 
         this.requiredRank = rank;
+    }
+
+    public boolean hasRankRequire() {
+        return requiredRank.ordinal() > Rank.PLAYER.ordinal();
     }
 
     public ChatMessage handleChat(ChatMessage message) {

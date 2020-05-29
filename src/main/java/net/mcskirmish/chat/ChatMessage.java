@@ -4,9 +4,7 @@ import net.mcskirmish.account.Account;
 
 public class ChatMessage {
 
-    // Check if this commits
-
-    private Account account;
+    private final Account account;
     private String format, message;
     private boolean cancelled;
 
@@ -24,24 +22,24 @@ public class ChatMessage {
         return this.format;
     }
 
-    public String getMessage() {
-        return this.message;
+    public void setFormat(String format) {
+        this.format = format;
     }
 
-    public boolean isCancelled() {
-        return this.cancelled;
+    public String getMessage() {
+        return this.message;
     }
 
     public void setMessage(String message) {
         this.message = message;
     }
 
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
+    public boolean isCancelled() {
+        return this.cancelled;
     }
 
-    public void setFormat(String format) {
-        this.format = format;
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
 }

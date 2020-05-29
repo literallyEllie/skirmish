@@ -13,7 +13,9 @@ import net.mcskirmish.util.UtilJson;
 import org.bson.Document;
 import org.bson.UuidRepresentation;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Map;
 
 public class MongoManager extends Module {
