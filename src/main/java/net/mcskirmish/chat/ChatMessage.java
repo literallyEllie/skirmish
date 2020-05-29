@@ -4,6 +4,8 @@ import net.mcskirmish.account.Account;
 
 public class ChatMessage {
 
+    // Check if this commits
+
     private Account account;
     private String format, message;
     private boolean cancelled;

@@ -18,6 +18,8 @@ public class CommandTest extends Command {
         super(plugin, "Test", "A simple test command.", Rank.ADMIN, Arrays.asList("test", "tst"), "/tst", "/test");
     }
 
+    // Is this actually comitting wtf
+
     @Override
     public void run(CommandSender sender, Account account, String usedLabel, String[] args) {
         if (!(sender instanceof Player)) {
@@ -26,6 +28,5 @@ public class CommandTest extends Command {
         }
 
         account.sendMessage("TEST", ChatColor.YELLOW, "This is simply a test command...", "nothing much...");
-        return;
     }
 }
