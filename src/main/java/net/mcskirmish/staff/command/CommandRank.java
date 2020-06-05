@@ -36,7 +36,7 @@ public class CommandRank extends Command {
         }
 
         Account target = getAccount(args[0]);
-        if (target == null){
+        if (target == null) {
             couldNotFind(sender, args[0]);
             return;
         }

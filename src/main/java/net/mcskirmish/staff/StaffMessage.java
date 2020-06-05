@@ -1,9 +1,5 @@
 package net.mcskirmish.staff;
 
-import com.sun.corba.se.impl.naming.cosnaming.InternalBindingKey;
-import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
-
 public class StaffMessage {
 
     private final String channel, sender, message;

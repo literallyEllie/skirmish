@@ -21,16 +21,16 @@ public class ChatPolicy {
         return this.format;
     }
 
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
     public int getChatDelay() {
         return this.chatDelay;
     }
 
     public Rank getRequiredRank() {
         return this.requiredRank;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
     }
 
     public void setChatDelay(String executorName, boolean silent, int delay) {

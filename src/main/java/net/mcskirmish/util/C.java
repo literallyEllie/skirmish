@@ -1,6 +1,5 @@
 package net.mcskirmish.util;
 
-import net.citizensnpcs.npc.ai.speech.Chat;
 import org.bukkit.ChatColor;
 
 public class C {

@@ -7,12 +7,11 @@ import redis.clients.jedis.JedisPubSub;
 
 public abstract class RedisSubscriber<T, P extends Module> extends JedisPubSub {
 
-    private final Class<T> childType;
-
     protected final SkirmishPlugin plugin;
     protected final P parent;
     protected final String channel;
     protected final RedisRepository repository;
+    private final Class<T> childType;
 
     public RedisSubscriber(Class<T> childType, SkirmishPlugin plugin, P parent, String channel) {
         this.childType = childType;

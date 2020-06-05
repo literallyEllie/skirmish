@@ -2,7 +2,6 @@ package net.mcskirmish;
 
 import net.mcskirmish.account.Account;
 import net.mcskirmish.util.C;
-import net.mcskirmish.util.D;
 import org.bukkit.command.CommandSender;
 
 public interface IInteractive {

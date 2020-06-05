@@ -7,7 +7,6 @@ import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;
 import net.mcskirmish.util.*;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;

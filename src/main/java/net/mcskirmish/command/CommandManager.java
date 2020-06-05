@@ -3,8 +3,6 @@ package net.mcskirmish.command;
 import com.google.common.collect.Lists;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
-import net.mcskirmish.util.UtilReflect;
-import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 
 import java.lang.reflect.Field;

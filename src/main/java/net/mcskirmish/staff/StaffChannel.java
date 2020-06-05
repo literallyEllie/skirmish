@@ -1,7 +1,6 @@
 package net.mcskirmish.staff;
 
 import net.mcskirmish.account.Rank;
-import net.mcskirmish.util.C;
 import org.bukkit.ChatColor;
 
 public enum StaffChannel {
