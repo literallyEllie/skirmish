@@ -4,10 +4,9 @@ import net.mcskirmish.IInteractive;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.util.Prefix;
+import net.mcskirmish.util.P;
 import net.md_5.bungee.event.EventHandler;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class ChatManager extends Module implements IInteractive {
@@ -22,7 +21,6 @@ public class ChatManager extends Module implements IInteractive {
     protected void start() {
         chatPolicy = new ChatPolicy();
 
-
     }
 
     @EventHandler
@@ -30,8 +28,6 @@ public class ChatManager extends Module implements IInteractive {
         Account account = plugin.getAccountManager().getAccount(e.getPlayer());
 
         e.setFormat(e.getPlayer().getDisplayName() + ": " + ChatColor.RESET + " %s");
-        //TODO PROVIDE AN OPTION TO MAKE IT SO ANY SERVER CAN SET WHAT THE CHAT LOOKS LIKE
-        //TODO UTILIZE CHAT POLICY IM TOO TIRED RN LOL
     }
 
     public ChatPolicy getChatPolicy() {
@@ -44,7 +40,7 @@ public class ChatManager extends Module implements IInteractive {
 
     @Override
     public String getPrefix() {
-        return Prefix.CHAT;
+        return P.MODULE + "CHAT";
     }
 
 }

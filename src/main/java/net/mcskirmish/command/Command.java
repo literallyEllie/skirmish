@@ -1,11 +1,12 @@
 package net.mcskirmish.command;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import net.mcskirmish.IInteractive;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;
-import net.mcskirmish.util.Domain;
-import net.mcskirmish.util.UtilPlayer;
+import net.mcskirmish.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,11 +16,12 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Command extends org.bukkit.command.Command implements CommandExecutor, TabCompleter {
+public abstract class Command extends org.bukkit.command.Command implements CommandExecutor, TabCompleter, IInteractive {
 
     protected final SkirmishPlugin plugin;
     private final Rank requiredRank;
     private final int requiredArgs;
+    private final String prefix, usageSuffix;
 
     private boolean requiresPlayer;
 
@@ -28,9 +30,12 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
         super.setDescription(description.endsWith(".") ? description : description + ".");
         super.setAliases(aliases);
 
+
         this.plugin = plugin;
         this.requiredRank = rank;
         this.requiredArgs = (int) Arrays.stream(usage).filter((s) -> s.contains("<")).count();
+        this.prefix = P.MODULE + name.toUpperCase();
+        this.usageSuffix = Joiner.on(" ").join(usage) + C.C + " - " + C.V + description;
     }
 
     public Command(SkirmishPlugin plugin, String name, String description, List<String> aliases, String... usage) {
@@ -53,13 +58,13 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
         if (sender instanceof Player) {
             account = getAccount(sender);
             if (account == null) {
-                ((Player) sender).kickPlayer(ChatColor.RED + "It looks like your data went missing, " +
-                        "you have been kicked to avoid further loss. Join our Discord for support " + Domain.DISCORD);
+                ((Player) sender).kickPlayer(C.IC + "It looks like your data went missing..." +
+                        "\nYou have been kicked to avoid further loss. \n\nJoin our Discord for support " + C.IV + Domain.DISCORD);
                 return false;
             }
 
             if (!account.getRank().isHigherOrEqualTo(requiredRank)) {
-                // TODO no perm message
+                sender.sendMessage(M.noPerm(requiredRank));
                 return true;
             }
 
@@ -75,7 +80,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
             run(sender, account, commandLabel, args);
         } catch (Throwable throwable) {
             plugin.error("error executing command " + getLabel(), throwable);
-            sender.sendMessage(ChatColor.RED + "There was an error executing that command, report to a member of staff");
+            sender.sendMessage(C.IV + "There was an error executing that command, report to a member of staff");
             return false;
         }
 
@@ -92,12 +97,9 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
         return Lists.newArrayList();
     }
 
-    public void msg(CommandSender sender, String message) {
-        sender.sendMessage(message);
-    }
-
-    public void msg(Account account, String message) {
-        account.sendMessage(message);
+    @Override
+    public String getPrefix() {
+        return prefix;
     }
 
     protected Account getAccount(CommandSender sender) {
@@ -119,17 +121,15 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
         return check;
     }
 
-    public void usage(CommandSender sender, String aliasUsed) {
-        // TODO usage
-        msg(sender, "Usage: ");
+    public final void usage(CommandSender sender, String aliasUsed) {
+        message(sender, C.C + "Usage: " + C.V + "/" + aliasUsed + " " + usageSuffix);
     }
 
-    public void couldNotFind(CommandSender sender, String thing) {
-        // TODO
-        msg(sender, "Could not find " + thing);
+    public final void couldNotFind(CommandSender sender, String thing) {
+        message(sender, M.NO_FOUND + thing);
     }
 
-    public Player getPlayer(CommandSender sender, String name) {
+    public final Player getPlayer(CommandSender sender, String name) {
         final Player player = UtilPlayer.getP(name);
         if (player == null) {
             couldNotFind(sender, "Player " + name);

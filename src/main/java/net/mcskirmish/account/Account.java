@@ -1,9 +1,9 @@
 package net.mcskirmish.account;
 
 import com.google.common.collect.Lists;
-import net.mcskirmish.util.F;
+import net.mcskirmish.IInteractive;
+import net.mcskirmish.util.D;
 import org.bson.Document;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -90,7 +90,7 @@ public class Account {
     }
 
     public String getNameLower() {
-        return document.getString(NAME);
+        return document.getString(NAME_LOWER);
     }
 
     public List<String> getPreviousNames() {
@@ -124,11 +124,12 @@ public class Account {
             System.out.println(getUuid() + " has invalid rank (" + document.getString(RANK) + ")");
             setRank(Rank.PLAYER);
         }
+
         return Rank.PLAYER;
     }
 
     public void setRank(Rank rank) {
-        set(RANK, rank.toString());
+        set(RANK, rank.name());
         setDisplay();
     }
 
@@ -141,30 +142,27 @@ public class Account {
     }
 
     public void sendMessage(String message) {
-        if (player == null) return;
+        if (player == null)
+            return;
 
-        player.sendMessage(F.f(message));
+        player.sendMessage(message);
     }
 
-    public void sendMessage(String... message) {
-        if (player == null) return;
+    public void sendMessage(String... messages) {
+        if (player == null)
+            return;
 
-        for (String str : message) {
+        for (String message : messages) {
             sendMessage(message);
         }
     }
 
-    public void sendMessage(String message, String prefix, ChatColor prefixColor) {
-        sendMessage(ChatColor.BOLD + "" + prefixColor + prefix.toUpperCase() + " " + ChatColor.RESET + message);
-    }
+    public void sendMessage(IInteractive interactive, String message) {
+        if (player == null)
+            return;
 
-    public void sendMessage(String prefix, ChatColor prefixColor, String... message) {
-       for (String str : message) {
-           sendMessage(str, prefix, prefixColor);
-       }
+        interactive.message(player, message);
     }
-
-    //TODO ADD A POLICY FOR PREFIXES.
 
     /*
     public long getLastUse(String key) {

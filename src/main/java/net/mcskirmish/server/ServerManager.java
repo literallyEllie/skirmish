@@ -28,10 +28,13 @@ public class ServerManager extends Module {
         }
 
         // min rank
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(PATH_MIN_RANK)))) {
-            minRank = Rank.valueOf(reader.readLine());
-        } catch (IOException e) {
-            plugin.error("failed to read from min rank file", e);
+        final File minRankFile = new File(PATH_MIN_RANK);
+        if (minRankFile.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(minRankFile))) {
+                minRank = Rank.valueOf(reader.readLine());
+            } catch (IOException e) {
+                plugin.error("failed to read from min rank file", e);
+            }
         }
 
     }
@@ -41,6 +44,8 @@ public class ServerManager extends Module {
     }
 
     public Rank getMinRank() {
+        if (minRank == null)
+            minRank = Rank.PLAYER;
         return minRank;
     }
 

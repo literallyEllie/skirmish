@@ -3,11 +3,11 @@ package net.mcskirmish.command;
 import com.google.common.collect.Lists;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
-import net.mcskirmish.command.commands.CommandTest;
 import net.mcskirmish.util.UtilReflect;
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class CommandManager extends Module {
@@ -24,12 +24,13 @@ public class CommandManager extends Module {
     @Override
     protected void start() {
         localCommands = Lists.newArrayList();
-        registerCommands(new CommandTest(plugin));
 
         try {
-            commandMap = (CommandMap) UtilReflect.getField(Server.class, "commandMap", plugin.getServer());
-        } catch (IllegalArgumentException e) {
-            plugin.error("error getting command map", e);
+            final Field commandMap = plugin.getServer().getClass().getDeclaredField("commandMap");
+            commandMap.setAccessible(true);
+            this.commandMap = (CommandMap) commandMap.get(plugin.getServer());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            plugin.error("failed to get commandMap", e);
         }
     }
 

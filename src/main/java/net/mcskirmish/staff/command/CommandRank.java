@@ -1,18 +1,21 @@
 package net.mcskirmish.staff.command;
 
+import com.google.common.collect.Lists;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;
 import net.mcskirmish.command.Command;
+import net.mcskirmish.util.P;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
 
-public class CommandSetRank extends Command {
+public class CommandRank extends Command {
 
-    public CommandSetRank(SkirmishPlugin plugin) {
-        super(plugin, "setrank", "Sets rank of a player", Rank.ADMIN, "<player>", "<rank>");
+    public CommandRank(SkirmishPlugin plugin) {
+        super(plugin, "rank", "Sets rank of a player", Rank.ADMIN, Lists.newArrayList("setrank"),
+                "<player>", "<rank>");
     }
 
     @Override
@@ -26,10 +29,9 @@ public class CommandSetRank extends Command {
 
         // if the rank is equal or above them
         if (sender instanceof Player &&
-                account.getRank().isHigherOrEqualTo(rank)) {
+                rank.isHigherOrEqualTo(account.getRank())) {
 
-            // TODO no perm format
-            msg(sender, "You cannot set a rank higher or equal to your own.");
+            message(sender, P.DENIED, "You cannot set a rank higher or equal to your own.");
             return;
         }
 
@@ -40,8 +42,8 @@ public class CommandSetRank extends Command {
         }
 
         target.setRank(rank);
-        msg(target, "Your rank has been updated to " + rank.getPrefix());
-        msg(sender, "Updated the rank of " + target.getName() + " to " + rank.getPrefix());
+        message(target, "Your rank has been updated to " + rank.getPrefix());
+        message(sender, "Updated the rank of " + target.getName() + " to " + rank.getPrefix());
 
         plugin.log(sender.getName() + " set rank of " + target.getName() + " to " + rank);
     }

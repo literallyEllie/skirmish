@@ -17,12 +17,20 @@ public class UtilJson {
         };
     }
 
+    public static String toJson(Object object) {
+        return GSON.toJson(object);
+    }
+
     public static <T> T fromFile(JsonReader reader, TypeToken<T> token) {
         return GSON.fromJson(reader, token.getType());
     }
 
     public static <T> T fromString(String json, TypeToken<T> token) {
         return GSON.fromJson(json, token.getType());
+    }
+
+    public static <T> T fromString(String json, Class<T> clazz) {
+        return GSON.fromJson(json, clazz);
     }
 
     public static Map<String, String> fromConfig(JsonReader reader) {

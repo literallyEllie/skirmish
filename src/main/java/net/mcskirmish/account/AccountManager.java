@@ -4,9 +4,7 @@ import com.google.common.collect.Maps;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.mongo.table.AccountsRepository;
-import net.mcskirmish.util.Domain;
-import net.mcskirmish.util.UtilPlayer;
-import net.mcskirmish.util.UtilTime;
+import net.mcskirmish.util.*;
 import org.bson.Document;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,10 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class AccountManager extends Module {
@@ -70,7 +65,7 @@ public class AccountManager extends Module {
             List<String> pNames = account.getPreviousNames();
 
             // update names
-            if (!newAccount && !name.equals(account.get(Account.NAME))) {
+            if (!newAccount && !name.equals(account.getName())) {
                 account.set(Account.NAME, name);
                 account.set(Account.NAME_LOWER, name.toLowerCase());
 
@@ -91,7 +86,7 @@ public class AccountManager extends Module {
             final Rank minRank = plugin.getServerManager().getMinRank();
             if (account.getRank().ordinal() < minRank.ordinal()) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
-                        ChatColor.RED + "You only " + minRank.getPrefix() + ChatColor.RED + "+ can join this server :(");
+                        ChatColor.RED + "Only " + minRank.getPrefix() + ChatColor.RED + "+ can join this server :(");
                 return;
             }
 
@@ -116,8 +111,8 @@ public class AccountManager extends Module {
         final Account account = getAccount(player);
 
         if (account == null) {
-            player.kickPlayer(ChatColor.RED + "Sorry! There was an error loading your data." +
-                    "\nJoin our Discord for support " + Domain.DISCORD);
+            player.kickPlayer(C.IC + "Sorry! There was an error loading your data..." +
+                    "\n\nJoin our Discord for support " + C.IV + Domain.DISCORD);
             return;
         }
 
@@ -128,6 +123,10 @@ public class AccountManager extends Module {
     public void onLeave(PlayerQuitEvent event) {
         accounts.remove(event.getPlayer().getUniqueId());
         event.setQuitMessage(null);
+    }
+
+    public Collection<Account> getAccounts() {
+        return accounts.values();
     }
 
     public Account getAccount(Player player) {
@@ -176,7 +175,7 @@ public class AccountManager extends Module {
                     callback.accept(success);
 
                 if (!success) {
-                    logDbError(UtilTime.fullDate() + " FAILED UPDATE " + key + ": " + attribute);
+                    logDbError(UtilTime.fullDate() + " FAILED UPDATE '" + key + "': '" + attribute + "' to " + repo.getRepository() + " for " + account.getUuid());
                 }
             });
 
