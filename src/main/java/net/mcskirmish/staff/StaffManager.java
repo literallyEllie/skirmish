@@ -3,6 +3,7 @@ package net.mcskirmish.staff;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
+import net.mcskirmish.staff.command.CommandHeal;
 import net.mcskirmish.staff.command.CommandRank;
 import net.mcskirmish.staff.command.CommandStaffChat;
 import org.bukkit.ChatColor;
@@ -22,7 +23,7 @@ public class StaffManager extends Module {
         redisStaffChat = new RedisStaffChat(plugin);
 
         plugin.getCommandManager().registerCommands(
-                new CommandRank(plugin)
+                new CommandRank(plugin), new CommandHeal(plugin)
         );
 
         for (StaffChannel channel : StaffChannel.values()) {

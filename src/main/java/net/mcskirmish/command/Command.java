@@ -128,6 +128,8 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
         message(sender, M.NO_FOUND + thing);
     }
 
+    public final void consoleCannotRun(CommandSender sender) { message(sender, M.NO_PERM + "You cannot execute this in CONSOLE!");};
+
     public final Player getPlayer(CommandSender sender, String name) {
         final Player player = UtilPlayer.getP(name);
         if (player == null) {
