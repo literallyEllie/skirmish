@@ -8,6 +8,13 @@ public class ChatMessage {
     private String format, message;
     private boolean cancelled;
 
+    /**
+     * Represents a chat message that is sent from a player
+     *
+     * @param account account who sent
+     * @param format the format of the message
+     * @param message the raw message they wrote
+     */
     public ChatMessage(Account account, String format, String message) {
         this.account = account;
         this.format = format;

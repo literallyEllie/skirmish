@@ -4,6 +4,12 @@ import org.bukkit.ChatColor;
 
 public class C {
 
+    /**
+     * Represents the general network color scheme
+     */
+    C() {
+    }
+
     // constant
     public static final String C = ChatColor.YELLOW.toString();
     // var

@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.mongo.table.AccountsRepository;
+import net.mcskirmish.server.ServerManager;
 import net.mcskirmish.util.C;
 import net.mcskirmish.util.Domain;
 import net.mcskirmish.util.UtilPlayer;
@@ -30,6 +31,23 @@ public class AccountManager extends Module {
     private AccountsRepository repo;
     private Map<UUID, Account> accounts;
 
+    /**
+     * Data manager that loads and saves data fields of a player.
+     *
+     * Any player's data will be loaded on {@link AsyncPlayerPreLoginEvent}
+     * They will be kicked if:
+     * - they have illegal characters in their name
+     * - there is a player already on the server with their username/uuid
+     * - they do not meet the minimum rank as defined in {@link ServerManager#getMinRank()}
+     *
+     * Data there will be updated according to the new data provided, if they have joined before
+     * Unless they are kicked before their data is loaded.
+     *
+     * When {@link PlayerJoinEvent} is called, it ensures their data is loaded and sets {@link Account#setPlayer(Player)}
+     * If the data is not, they will be kicked.
+     *
+     * @param plugin the plugin instance
+     */
     public AccountManager(SkirmishPlugin plugin) {
         super(plugin);
     }
@@ -132,10 +150,28 @@ public class AccountManager extends Module {
         return accounts.values();
     }
 
+    /**
+     * Gets the account of player without checking the database.
+     * As they should always have loaded data.
+     *
+     * @param player player to find data of
+     * @return their account data
+     */
     public Account getAccount(Player player) {
         return getAccount(player.getUniqueId(), false);
     }
 
+    /**
+     * Gets the account of player by their UUID
+     * with the optional parameter of checking the database for their data.
+     *
+     * If they are not on the server, it will be loaded directly from the database
+     * and not cached.
+     *
+     * @param uuid the players uuid
+     * @param database if to check the database
+     * @return their data, may be null if they have never joined.
+     */
     public Account getAccount(UUID uuid, boolean database) {
         if (accounts.containsKey(uuid))
             return accounts.get(uuid);
@@ -150,6 +186,16 @@ public class AccountManager extends Module {
         return null;
     }
 
+    /**
+     * Gets an account by their name (processed as lowercase) and whether to check the database.
+     *
+     * If they are not on the server, it will be loaded directly from the database
+     * and not cached.
+     *
+     * @param name name of the player
+     * @param database if to check the database
+     * @return their data, may be null if a user with that name has never joined.
+     */
     public Account getAccount(String name, boolean database) {
         String nameLower = name.toLowerCase();
 
@@ -169,6 +215,17 @@ public class AccountManager extends Module {
         return null;
     }
 
+    /**
+     * Updates a field of a player data to the database.
+     * This should not be called outside of {@link Account} because it should be consistent
+     *
+     * If the update fails, it will be logged in a file.
+     *
+     * @param account the subject account
+     * @param key the database key
+     * @param attribute the attribute to update
+     * @param callback a callback for when the data is updated
+     */
     public void updateAccount(Account account, String key, Object attribute, Consumer<Boolean> callback) {
         if (key != null && attribute != null) {
             runAsync(() -> {

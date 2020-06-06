@@ -12,8 +12,18 @@ public enum Rank {
     OWNER("Owner", ChatColor.DARK_RED);
 
     private final String name;
-    private final ChatColor rankColor, chatColor; // TODO Maybe make rank colour or user colour optional?
+    private final ChatColor rankColor, chatColor;
 
+    /**
+     * Represents any rank which a player can have.
+     * It is done in the order of hierarchy from lowest to highest.
+     *
+     * To compare ranks use {@link Rank#isHigherOrEqualTo(Rank)}
+     *
+     * @param name name of the rank
+     * @param rankColor rank prefix color
+     * @param userColor rank username color
+     */
     Rank(String name, ChatColor rankColor, ChatColor userColor) {
         this.name = name;
         this.rankColor = rankColor;
