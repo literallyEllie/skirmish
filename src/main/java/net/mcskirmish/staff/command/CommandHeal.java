@@ -26,7 +26,7 @@ public class CommandHeal extends Command {
             if (sender instanceof Player) {
                 target = account;
             } else {
-                consoleCannotRun(sender);
+                specifyTarget(sender);
                 return;
             }
         } else {
