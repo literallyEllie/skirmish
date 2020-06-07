@@ -47,5 +47,4 @@ public class CommandHeal extends Command {
         target.getPlayer().setHealth(target.getPlayer().getMaxHealth());
     }
 
-    // Possibly log it so all staff can see what you done?
 }
