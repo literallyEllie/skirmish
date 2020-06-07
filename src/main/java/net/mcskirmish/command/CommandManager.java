@@ -15,6 +15,16 @@ public class CommandManager extends Module {
     private List<Command> localCommands;
     private CommandMap commandMap;
 
+    /**
+     * Handles all API commands.
+     * Commands should not be created outside of the provided API ({@link Command})
+     * to keep consistency.
+     *
+     * Commands can be registered and got using
+     * Command#registerCommands and Command#getCommand respectively.
+     *
+     * @param plugin plugin instance
+     */
     public CommandManager(SkirmishPlugin plugin) {
         super(plugin);
     }
@@ -38,6 +48,13 @@ public class CommandManager extends Module {
         localCommands.clear();
     }
 
+    /**
+     * Gets a command by its class as registered as a local command
+     *
+     * @param command the command class
+     * @param <T> the expected type
+     * @return the command matching this class, may be null if no such command is registered.
+     */
     public <T> Command getCommand(Class<T> command) {
         for (Command commands : localCommands) {
             if (commands.getClass().equals(command))
@@ -46,6 +63,11 @@ public class CommandManager extends Module {
         return null;
     }
 
+    /**
+     * Registers a varargs array of commands
+     *
+     * @param commands commands to register
+     */
     public void registerCommands(Command... commands) {
         if (commandMap == null)
             return;
@@ -60,6 +82,12 @@ public class CommandManager extends Module {
         }
     }
 
+    /**
+     * Unregisters a command from the command map.
+     *
+     * @param command the command to unregister
+     * @param safe if should remove from the local list of commands
+     */
     public void unregisterCommand(Command command, boolean safe) {
         if (!safe)
             this.localCommands.remove(command);

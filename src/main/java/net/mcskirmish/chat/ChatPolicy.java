@@ -11,6 +11,11 @@ public class ChatPolicy {
     private int chatDelay;
     private Rank requiredRank;
 
+    /**
+     * The base implementation of a {@link ChatPolicy}
+     *
+     * Controls how the chat functions.
+     */
     public ChatPolicy() {
         this.format = "{display}" + ChatColor.DARK_GRAY + "> {message}";
         this.chatDelay = 1;

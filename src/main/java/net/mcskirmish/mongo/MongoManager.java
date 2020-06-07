@@ -27,6 +27,13 @@ public class MongoManager extends Module {
     private MongoClient client;
     private MongoDatabase database;
 
+    /**
+     * Base wrapper used to access the database.
+     * 
+     * Access using a {@link MongoRepository} through {@link MongoManager#getCollection(MongoRepository)}
+     *
+     * @param plugin plugin instance
+     */
     public MongoManager(SkirmishPlugin plugin) {
         super(plugin);
     }
@@ -66,6 +73,14 @@ public class MongoManager extends Module {
             client.close();
     }
 
+    /**
+     * Gets the collection from a {@link MongoRepository} wrapper.
+     *
+     * May be null if the is no database connected.
+     *
+     * @param table the table of the data
+     * @return the {@link MongoCollection} of the table, or null if there is no connection.
+     */
     public MongoCollection<Document> getCollection(MongoRepository table) {
         return database != null
                 ? database.getCollection(table.getRepository())

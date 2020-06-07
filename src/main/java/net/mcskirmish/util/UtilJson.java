@@ -33,6 +33,13 @@ public class UtilJson {
         return GSON.fromJson(json, clazz);
     }
 
+    /**
+     * Reads from a {@link JsonReader} and just casts everything to a string.
+     * Should only be used for simple configs.
+     *
+     * @param reader reader to use
+     * @return a map of keys and values in the stream.
+     */
     public static Map<String, String> fromConfig(JsonReader reader) {
         return fromFile(reader, GENERIC_CONF_TOKEN);
     }

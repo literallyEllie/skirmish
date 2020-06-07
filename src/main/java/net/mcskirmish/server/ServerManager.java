@@ -39,21 +39,41 @@ public class ServerManager extends Module {
 
     }
 
+    /**
+     * Gets the server id of this server as read from file at startup.
+     * All servers are required to have this.
+     *
+     * @return the id of this server
+     */
     public String getServerId() {
         return serverId;
     }
 
+    /**
+     * Gets the min rank required to join the server
+     * as enforced by {@link net.mcskirmish.account.AccountManager}
+     *
+     * @return the minimum rank to join
+     */
     public Rank getMinRank() {
         if (minRank == null)
             minRank = Rank.PLAYER;
         return minRank;
     }
 
+    /**
+     * Sets the minimum rank to join the server and writes to file
+     *
+     * Enforced by {@link net.mcskirmish.account.AccountManager}
+     *
+     * @param minRank min rank required to join the server
+     */
     public void setMinRank(Rank minRank) {
         this.minRank = minRank;
 
         try (FileWriter writer = new FileWriter(new File(PATH_MIN_RANK))) {
             writer.write(minRank.name());
+            writer.flush();
         } catch (IOException e) {
             plugin.error("failed to write min rank", e);
         }

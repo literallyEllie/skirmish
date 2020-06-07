@@ -13,6 +13,19 @@ public class ChatManager extends Module implements IInteractive {
 
     private ChatPolicy chatPolicy;
 
+    /**
+     * Chat manager processing all messages through a {@link ChatPolicy}
+     * This includes:
+     * - minimum rank to speak
+     * - chat filter
+     * - chat delay
+     * - replacing chat colors
+     *
+     * By default it will use the base implementations of {@link ChatPolicy}
+     * however it can be modified by an underlying plugin and set
+     *
+     * @param plugin instance of the plugin
+     */
     public ChatManager(SkirmishPlugin plugin) {
         super(plugin);
     }
@@ -20,7 +33,6 @@ public class ChatManager extends Module implements IInteractive {
     @Override
     protected void start() {
         chatPolicy = new ChatPolicy();
-
     }
 
     @EventHandler

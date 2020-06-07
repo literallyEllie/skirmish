@@ -16,6 +16,12 @@ public class RedisRepository {
 
     private final JedisPool pool;
 
+    /**
+     * Represents the redis repository of a database.
+     * Uses to get a connection to Redis
+     *
+     * @param credentialsFile the file to load credentials from
+     */
     public RedisRepository(File credentialsFile) {
         final Map<String, String> values = readConfig(credentialsFile);
         if (values != null) {
