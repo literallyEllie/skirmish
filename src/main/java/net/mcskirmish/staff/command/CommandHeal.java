@@ -45,5 +45,4 @@ public class CommandHeal extends Command {
         target.getPlayer().setHealth(target.getPlayer().getMaxHealth());
     }
 
-
 }
