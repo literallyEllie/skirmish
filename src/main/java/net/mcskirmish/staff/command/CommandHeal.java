@@ -16,7 +16,7 @@ public class CommandHeal extends Command {
 
 
     public CommandHeal(SkirmishPlugin plugin) {
-        super(plugin, "Heal Command", "Heals a player.", Rank.ADMIN, Lists.newArrayList("heal"), "[player]");
+        super(plugin, "Heal", "Heals a player.", Rank.ADMIN, Lists.newArrayList("heal"), "[player]");
     }
 
     @Override
@@ -37,12 +37,14 @@ public class CommandHeal extends Command {
             }
         }
 
-        message(sender, "Healed player " + account.getName());
-        if (target != account) {
+
+        if (target == account) {
             message(target, "You have been healed!");
+        } else {
+            message(sender, "Healed player " + target.getName());
         }
 
-        account.getPlayer().setHealth(account.getPlayer().getMaxHealth());
+        target.getPlayer().setHealth(target.getPlayer().getMaxHealth());
     }
 
     // Possibly log it so all staff can see what you done?
