@@ -1,5 +1,6 @@
 package net.mcskirmish.staff.command;
 
+import com.google.common.collect.Lists;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;
@@ -11,7 +12,7 @@ import org.bukkit.entity.Player;
 public class CommandClearInventory extends Command {
 
     public CommandClearInventory(SkirmishPlugin plugin) {
-        super(plugin, "ClearInventory", "Clears a players inventory.", Rank.ADMIN, "[player]");
+        super(plugin, "clearinventory", "Clears a players inventory.", Rank.ADMIN, Lists.newArrayList("ci"), "[player]");
     }
 
     @Override
