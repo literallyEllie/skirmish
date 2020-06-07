@@ -19,7 +19,7 @@ public class CommandManager extends Module {
      * Handles all API commands.
      * Commands should not be created outside of the provided API ({@link Command})
      * to keep consistency.
-     *
+     * <p>
      * Commands can be registered and got using
      * Command#registerCommands and Command#getCommand respectively.
      *
@@ -52,7 +52,7 @@ public class CommandManager extends Module {
      * Gets a command by its class as registered as a local command
      *
      * @param command the command class
-     * @param <T> the expected type
+     * @param <T>     the expected type
      * @return the command matching this class, may be null if no such command is registered.
      */
     public <T> Command getCommand(Class<T> command) {
@@ -86,7 +86,7 @@ public class CommandManager extends Module {
      * Unregisters a command from the command map.
      *
      * @param command the command to unregister
-     * @param safe if should remove from the local list of commands
+     * @param safe    if should remove from the local list of commands
      */
     public void unregisterCommand(Command command, boolean safe) {
         if (!safe)

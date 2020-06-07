@@ -33,16 +33,16 @@ public class AccountManager extends Module {
 
     /**
      * Data manager that loads and saves data fields of a player.
-     *
+     * <p>
      * Any player's data will be loaded on {@link AsyncPlayerPreLoginEvent}
      * They will be kicked if:
      * - they have illegal characters in their name
      * - there is a player already on the server with their username/uuid
      * - they do not meet the minimum rank as defined in {@link ServerManager#getMinRank()}
-     *
+     * <p>
      * Data there will be updated according to the new data provided, if they have joined before
      * Unless they are kicked before their data is loaded.
-     *
+     * <p>
      * When {@link PlayerJoinEvent} is called, it ensures their data is loaded and sets {@link Account#setPlayer(Player)}
      * If the data is not, they will be kicked.
      *
@@ -164,11 +164,11 @@ public class AccountManager extends Module {
     /**
      * Gets the account of player by their UUID
      * with the optional parameter of checking the database for their data.
-     *
+     * <p>
      * If they are not on the server, it will be loaded directly from the database
      * and not cached.
      *
-     * @param uuid the players uuid
+     * @param uuid     the players uuid
      * @param database if to check the database
      * @return their data, may be null if they have never joined.
      */
@@ -188,11 +188,11 @@ public class AccountManager extends Module {
 
     /**
      * Gets an account by their name (processed as lowercase) and whether to check the database.
-     *
+     * <p>
      * If they are not on the server, it will be loaded directly from the database
      * and not cached.
      *
-     * @param name name of the player
+     * @param name     name of the player
      * @param database if to check the database
      * @return their data, may be null if a user with that name has never joined.
      */
@@ -218,13 +218,13 @@ public class AccountManager extends Module {
     /**
      * Updates a field of a player data to the database.
      * This should not be called outside of {@link Account} because it should be consistent
-     *
+     * <p>
      * If the update fails, it will be logged in a file.
      *
-     * @param account the subject account
-     * @param key the database key
+     * @param account   the subject account
+     * @param key       the database key
      * @param attribute the attribute to update
-     * @param callback a callback for when the data is updated
+     * @param callback  a callback for when the data is updated
      */
     public void updateAccount(Account account, String key, Object attribute, Consumer<Boolean> callback) {
         if (key != null && attribute != null) {

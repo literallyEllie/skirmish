@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class RedisManager extends Module {
 
-    private static final String PATH_REDIS = "config" + File.separator + "redis";
+    private static final String PATH_REDIS = "config" + File.separator + "redis.json";
 
     private Set<RedisSubscriber<?, ?>> subscribers;
     private RedisRepository repository;

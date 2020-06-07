@@ -5,13 +5,14 @@ import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;
 import net.mcskirmish.command.Command;
 import net.mcskirmish.util.C;
+import net.mcskirmish.util.M;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandHeal extends Command {
+public class CommandFly extends Command {
 
-    public CommandHeal(SkirmishPlugin plugin) {
-        super(plugin, "heal", "Heals a player.", Rank.ADMIN, "[player]");
+    public CommandFly(SkirmishPlugin plugin) {
+        super(plugin, "fly", "Toggle flying mode for a player", Rank.MODERATOR, "[player]");
     }
 
     @Override
@@ -25,18 +26,26 @@ public class CommandHeal extends Command {
                 return;
             }
         } else {
+            if (account != null && !account.getRank().isHigherOrEqualTo(Rank.ADMIN)) {
+                sender.sendMessage(M.noPerm(Rank.ADMIN));
+                return;
+            }
+
             target = getPlayer(sender, args[0]);
             if (target == null) {
                 return;
             }
         }
 
-        target.getPlayer().setHealth(target.getPlayer().getMaxHealth());
+        boolean newState = !target.getAllowFlight();
+        target.setAllowFlight(newState);
+        target.setFlying(newState);
 
-        message(target, "You have been healed!");
+        message(target, "You can " + C.V + (newState ? "now" : "no longer") + C.C + " fly.");
         if (!target.equals(sender)) {
-            message(sender, "Healed player " + C.V + target.getName());
+            message(sender, C.V + target.getName() + C.C + " can " + C.V + (newState ? "now" : "no longer") + C.C + " fly.");
         }
 
     }
+
 }

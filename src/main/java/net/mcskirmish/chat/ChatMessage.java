@@ -12,7 +12,7 @@ public class ChatMessage {
      * Represents a chat message that is sent from a player
      *
      * @param account account who sent
-     * @param format the format of the message
+     * @param format  the format of the message
      * @param message the raw message they wrote
      */
     public ChatMessage(Account account, String format, String message) {

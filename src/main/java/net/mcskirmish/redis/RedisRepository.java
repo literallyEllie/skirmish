@@ -33,14 +33,15 @@ public class RedisRepository {
             config.setTestOnReturn(true);
 
             if (values.containsKey("auth")) {
-                pool = new JedisPool(config, values.get("host"), Integer.parseInt(values.get("port")));
-            } else {
                 pool = new JedisPool(config, values.get("host"), Integer.parseInt(values.get("port")),
                         2000, values.get("auth"));
+            } else {
+                pool = new JedisPool(config, values.get("host"), Integer.parseInt(values.get("port")));
             }
 
         } else
             pool = null;
+
     }
 
     public JedisPool getPool() {

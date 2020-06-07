@@ -8,6 +8,9 @@ import java.util.Optional;
 public enum Rank {
 
     PLAYER("Player", ChatColor.WHITE),
+    YOUTUBE("YouTube", ChatColor.WHITE),
+    TWITCH("Twitch", ChatColor.DARK_PURPLE),
+    MODERATOR("Mod", ChatColor.YELLOW),
     ADMIN("Admin", ChatColor.RED),
     OWNER("Owner", ChatColor.DARK_RED);
 
@@ -17,10 +20,10 @@ public enum Rank {
     /**
      * Represents any rank which a player can have.
      * It is done in the order of hierarchy from lowest to highest.
-     *
+     * <p>
      * To compare ranks use {@link Rank#isHigherOrEqualTo(Rank)}
      *
-     * @param name name of the rank
+     * @param name      name of the rank
      * @param rankColor rank prefix color
      * @param userColor rank username color
      */

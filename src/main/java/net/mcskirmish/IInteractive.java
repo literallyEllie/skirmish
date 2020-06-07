@@ -12,7 +12,7 @@ public interface IInteractive {
      * Sends a message to the player using the implemented {@link IInteractive#getPrefix()}
      * It is null safe
      *
-     * @param sender the sender to send to (can be null)
+     * @param sender  the sender to send to (can be null)
      * @param message the message to send
      */
     default void message(CommandSender sender, String message) {
@@ -36,7 +36,7 @@ public interface IInteractive {
      * Sends a message to the player using a defined prefix
      * It is null safe
      *
-     * @param sender the sender to send to (can be null)
+     * @param sender  the sender to send to (can be null)
      * @param message the message to send
      */
     default void message(CommandSender sender, String prefix, String message) {

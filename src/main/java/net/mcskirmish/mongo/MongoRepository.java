@@ -17,12 +17,12 @@ public class MongoRepository {
 
     /**
      * Represents a wrapper for collections.
-     *
+     * <p>
      * For each used collection, a child class should be made respectively
      * in order to access the database.
      *
      * @param collection the collection to use
-     * @param plugin the plugin instance
+     * @param plugin     the plugin instance
      */
     public MongoRepository(String collection, SkirmishPlugin plugin) {
         this.collection = collection;
@@ -45,7 +45,7 @@ public class MongoRepository {
     /**
      * Queries the collection for key and the variable to search with.
      *
-     * @param key the key to find
+     * @param key    the key to find
      * @param search the key
      * @return a returned BSON {@link Document}
      */
@@ -55,13 +55,13 @@ public class MongoRepository {
 
     /**
      * Attempts to update a pair of data into the collection
-     *
+     * <p>
      * It will find the data to update using index and updateKey
      * and update the value of updateKey to be equal to updateValue
      *
-     * @param index the index to get the data by
-     * @param indexQuery the assigned index value
-     * @param updateKey the data key to update
+     * @param index       the index to get the data by
+     * @param indexQuery  the assigned index value
+     * @param updateKey   the data key to update
      * @param updateValue the assigned value of the data to update
      * @return if it was successful or not.
      */
@@ -78,9 +78,9 @@ public class MongoRepository {
     /**
      * Batch inserts a map of data into the database
      *
-     * @param index the index to get the data by
+     * @param index      the index to get the data by
      * @param indexQuery the assigned value of the index
-     * @param updates the values to update
+     * @param updates    the values to update
      */
     public void batchUpdate(String index, Object indexQuery, Map<String, Object> updates) {
         getCollection().updateMany(eq(index, indexQuery), updates.entrySet().stream()

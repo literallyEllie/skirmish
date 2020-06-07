@@ -30,12 +30,12 @@ public class Account {
 
     /**
      * Represents an account and personal data of a user.
-     *
+     * <p>
      * All primitive data is stored in a BSON {@link Document} which is recieved from the database
      * upon getting via {@link AccountManager#getAccount(UUID, boolean)
      *
      * @param accountManager instance of the account manager
-     * @param document raw document of the player
+     * @param document       raw document of the player
      */
     public Account(AccountManager accountManager, Document document) {
         this.accountManager = accountManager;

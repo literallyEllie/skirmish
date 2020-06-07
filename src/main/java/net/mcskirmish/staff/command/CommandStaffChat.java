@@ -16,14 +16,13 @@ public class CommandStaffChat extends Command {
 
     public CommandStaffChat(SkirmishPlugin plugin, StaffChannel channel) {
         super(plugin, channel.name() + "chat", "Sends messages to " + channel.name().toLowerCase() + " channel", channel.getRequired(),
-                Lists.newArrayList(channel.name().substring(0, 1) + "c"), "<message>");
+                Lists.newArrayList(channel.name().substring(0, 1).toLowerCase() + "c"), "<message>");
         this.channel = channel;
     }
 
     @Override
     public void run(CommandSender sender, Account account, String usedLabel, String[] args) {
         String message = ChatColor.translateAlternateColorCodes('&', Joiner.on(" ").join(args));
-
         plugin.getStaffManager().sendStaffChat(channel, sender instanceof Player ? account : sender, message);
     }
 

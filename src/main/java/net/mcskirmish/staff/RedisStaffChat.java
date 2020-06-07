@@ -5,8 +5,8 @@ import net.mcskirmish.redis.RedisSubscriber;
 
 public class RedisStaffChat extends RedisSubscriber<StaffMessage, StaffManager> {
 
-    public RedisStaffChat(SkirmishPlugin plugin) {
-        super(StaffMessage.class, plugin, plugin.getStaffManager(), "STAFFCHAT");
+    public RedisStaffChat(SkirmishPlugin plugin, StaffManager staffManager) {
+        super(StaffMessage.class, plugin, staffManager, "STAFFCHAT");
     }
 
     @Override

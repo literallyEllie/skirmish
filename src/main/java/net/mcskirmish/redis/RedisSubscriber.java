@@ -17,17 +17,17 @@ public abstract class RedisSubscriber<T, P extends Module> extends JedisPubSub {
 
     /**
      * Represents a subscriber listener to a Redis PubSub channel.
-     *
+     * <p>
      * If {@link SkirmishPlugin#isNetworkingServer()} is false, this will just act idle.
      * Implementation should be made to accommodate that.
-     *
+     * <p>
      * When a message is received on the channel. It parsed using {@link com.google.gson.Gson}
      * using the childType and sent to {@link RedisSubscriber#receive(Object)} for processing.
      *
      * @param childType the type expected to come through the channel
-     * @param plugin plugin instance
-     * @param parent the parent module for this subscriber
-     * @param channel the channel to listen on
+     * @param plugin    plugin instance
+     * @param parent    the parent module for this subscriber
+     * @param channel   the channel to listen on
      */
     public RedisSubscriber(Class<T> childType, SkirmishPlugin plugin, P parent, String channel) {
         this.childType = childType;
@@ -53,8 +53,8 @@ public abstract class RedisSubscriber<T, P extends Module> extends JedisPubSub {
     /**
      * Subscribes to the channel using a connection from the {@link RedisRepository#get(Consumer)}
      *
-     * <b>This method is called already from the constructor</b>
-     *
+     * <b>This method is called already from the constructor</b>D
+     * <p>
      * If the server is not {@link SkirmishPlugin#isNetworkingServer()} this will be ignored.
      */
     public void subscribe() {
@@ -65,9 +65,9 @@ public abstract class RedisSubscriber<T, P extends Module> extends JedisPubSub {
 
     /**
      * Publishes data to the channel for other listeners on this channel to process.
-     *
+     * <p>
      * The data is serialized into a JSON string with {@link com.google.gson.Gson}
-     *
+     * <p>
      * If the server is not {@link SkirmishPlugin#isNetworkingServer()} this will be ignored.
      *
      * @param data data to serialize and send on the channel

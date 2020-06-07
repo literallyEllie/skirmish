@@ -13,7 +13,7 @@ public class ChatPolicy {
 
     /**
      * The base implementation of a {@link ChatPolicy}
-     *
+     * <p>
      * Controls how the chat functions.
      */
     public ChatPolicy() {

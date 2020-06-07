@@ -29,7 +29,7 @@ public class MongoManager extends Module {
 
     /**
      * Base wrapper used to access the database.
-     * 
+     * <p>
      * Access using a {@link MongoRepository} through {@link MongoManager#getCollection(MongoRepository)}
      *
      * @param plugin plugin instance
@@ -75,7 +75,7 @@ public class MongoManager extends Module {
 
     /**
      * Gets the collection from a {@link MongoRepository} wrapper.
-     *
+     * <p>
      * May be null if the is no database connected.
      *
      * @param table the table of the data

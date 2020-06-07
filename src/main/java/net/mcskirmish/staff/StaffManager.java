@@ -3,6 +3,7 @@ package net.mcskirmish.staff;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
+import net.mcskirmish.staff.command.CommandFly;
 import net.mcskirmish.staff.command.CommandHeal;
 import net.mcskirmish.staff.command.CommandRank;
 import net.mcskirmish.staff.command.CommandStaffChat;
@@ -20,12 +21,12 @@ public class StaffManager extends Module {
 
     @Override
     protected void start() {
-        redisStaffChat = new RedisStaffChat(plugin);
-
         plugin.getCommandManager().registerCommands(
-                new CommandRank(plugin), new CommandHeal(plugin)
+                new CommandRank(plugin), new CommandHeal(plugin), new CommandFly(plugin)
         );
 
+        // staff chat init
+        redisStaffChat = new RedisStaffChat(plugin, this);
         for (StaffChannel channel : StaffChannel.values()) {
             plugin.getCommandManager().registerCommands(new CommandStaffChat(plugin, channel));
         }

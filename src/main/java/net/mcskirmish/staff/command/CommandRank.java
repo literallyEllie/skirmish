@@ -43,7 +43,9 @@ public class CommandRank extends Command {
 
         target.setRank(rank);
         message(target, "Your rank has been updated to " + rank.getPrefix());
-        message(sender, "Updated the rank of " + target.getName() + " to " + rank.getPrefix());
+
+        if (!sender.getName().equalsIgnoreCase(args[0]))
+            message(sender, "Updated the rank of " + target.getName() + " to " + rank.getPrefix());
 
         plugin.log(sender.getName() + " set rank of " + target.getName() + " to " + rank);
     }

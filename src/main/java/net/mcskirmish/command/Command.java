@@ -26,25 +26,24 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
 
     /**
      * Represents a command which can be run by a player.
-     *
+     * <p>
      * You can set whether this command can only be run by a player using {@link Command#requiresPlayer()}
      *
-     * @param plugin plugin instance
-     * @param name main label to execute
+     * @param plugin      plugin instance
+     * @param name        main label to execute
      * @param description brief description of what the command does
-     * @param rank the minimum rank required to execute the command
-     * @param aliases aliases of the command
-     * @param usage the varargs usage of the command in the format of:
-     *              "<...>", "[...]" etc.
-     *              Where <..> represents mandatory fields
-     *              And [..] represents optional fields
-     *              All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
+     * @param rank        the minimum rank required to execute the command
+     * @param aliases     aliases of the command
+     * @param usage       the varargs usage of the command in the format of:
+     *                    "<...>", "[...]" etc.
+     *                    Where <..> represents mandatory fields
+     *                    And [..] represents optional fields
+     *                    All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
      */
     public Command(SkirmishPlugin plugin, String name, String description, Rank rank, List<String> aliases, String... usage) {
         super(name);
         super.setDescription(description.endsWith(".") ? description : description + ".");
         super.setAliases(aliases);
-
 
         this.plugin = plugin;
         this.requiredRank = rank;
@@ -56,15 +55,15 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
     /**
      * Alternative constructor for commands which can be run by anyone. ({@link Rank#PLAYER})
      *
-     * @param plugin plugin instance
-     * @param name main label to execute
+     * @param plugin      plugin instance
+     * @param name        main label to execute
      * @param description brief description of what the command does
-     * @param aliases aliases of the command
-     * @param usage the varargs usage of the command in the format of:
-     *              "<...>", "[...]" etc.
-     *              Where <..> represents mandatory fields
-     *              And [..] represents optional fields
-     *              All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
+     * @param aliases     aliases of the command
+     * @param usage       the varargs usage of the command in the format of:
+     *                    "<...>", "[...]" etc.
+     *                    Where <..> represents mandatory fields
+     *                    And [..] represents optional fields
+     *                    All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
      */
     public Command(SkirmishPlugin plugin, String name, String description, List<String> aliases, String... usage) {
         this(plugin, name, description, Rank.PLAYER, aliases, usage);
@@ -73,15 +72,15 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
     /**
      * Alternative constructor for commands which have no aliases
      *
-     * @param plugin plugin instance
-     * @param name main label to execute
+     * @param plugin      plugin instance
+     * @param name        main label to execute
      * @param description brief description of what the command does
-     * @param rank the minimum rank required to execute the command
-     * @param usage the varargs usage of the command in the format of:
-     *              "<...>", "[...]" etc.
-     *              Where <..> represents mandatory fields
-     *              And [..] represents optional fields
-     *              All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
+     * @param rank        the minimum rank required to execute the command
+     * @param usage       the varargs usage of the command in the format of:
+     *                    "<...>", "[...]" etc.
+     *                    Where <..> represents mandatory fields
+     *                    And [..] represents optional fields
+     *                    All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
      */
     public Command(SkirmishPlugin plugin, String name, String description, Rank rank, String... usage) {
         this(plugin, name, description, rank, Lists.newArrayList(), usage);
@@ -97,19 +96,19 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
     /**
      * Method called when all the preconditions have been met and is ready to be passed through
      * to the implementation.
-     *
+     * <p>
      * Account will be null if sender is an instance of {@link org.bukkit.command.ConsoleCommandSender}
-     *
+     * <p>
      * When this is called, you can assume:
      * - Account is not null <b>unless</b> the reason stated above
      * - If a {@link Player} they are at least {@link Command#requiredRank}
      * - They are a player <b>unless</b> {@link Command#requiresPlayer}
      * - They have at least {@link Command#requiredArgs} in their args
      *
-     * @param sender the sender of the command
-     * @param account the possible account of the player (may be null)
+     * @param sender    the sender of the command
+     * @param account   the possible account of the player (may be null)
      * @param usedLabel the label they used to execute the command
-     * @param args the trailing arguments
+     * @param args      the trailing arguments
      */
     public abstract void run(CommandSender sender, Account account, String usedLabel, String[] args);
 
@@ -185,7 +184,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
     /**
      * Sends the {@link CommandSender} a usage message
      *
-     * @param sender the sender to message
+     * @param sender    the sender to message
      * @param aliasUsed the alias they used
      */
     public final void usage(CommandSender sender, String aliasUsed) {
@@ -196,7 +195,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
      * Sends the {@link CommandSender} a usage message
      *
      * @param sender the sender to message
-     * @param thing thing that could not be found
+     * @param thing  thing that could not be found
      */
     public final void couldNotFind(CommandSender sender, String thing) {
         message(sender, M.NO_FOUND + thing);
@@ -211,7 +210,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
      * If the player cannot be found, it will send them an appropriate response.
      *
      * @param sender the {@link CommandSender} who requested the finding
-     * @param name the name of the target player
+     * @param name   the name of the target player
      * @return the player which matches that name (may be null)
      */
     public final Player getPlayer(CommandSender sender, String name) {

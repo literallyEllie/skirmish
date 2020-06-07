@@ -63,7 +63,7 @@ public class ServerManager extends Module {
 
     /**
      * Sets the minimum rank to join the server and writes to file
-     *
+     * <p>
      * Enforced by {@link net.mcskirmish.account.AccountManager}
      *
      * @param minRank min rank required to join the server
