@@ -3,10 +3,7 @@ package net.mcskirmish.staff;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.staff.command.CommandFly;
-import net.mcskirmish.staff.command.CommandHeal;
-import net.mcskirmish.staff.command.CommandRank;
-import net.mcskirmish.staff.command.CommandStaffChat;
+import net.mcskirmish.staff.command.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -22,7 +19,7 @@ public class StaffManager extends Module {
     @Override
     protected void start() {
         plugin.getCommandManager().registerCommands(
-                new CommandRank(plugin), new CommandHeal(plugin), new CommandFly(plugin)
+                new CommandRank(plugin), new CommandHeal(plugin), new CommandFly(plugin), new CommandFeed(plugin), new CommandClearInventory(plugin)
         );
 
         // staff chat init
