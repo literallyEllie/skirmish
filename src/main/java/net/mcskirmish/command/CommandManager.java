@@ -3,7 +3,11 @@ package net.mcskirmish.command;
 import com.google.common.collect.Lists;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
+import net.mcskirmish.account.Account;
+import net.md_5.bungee.event.EventHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -13,6 +17,7 @@ public class CommandManager extends Module {
     private static final String COMMAND_ID = "skirmish";
 
     private List<Command> localCommands;
+    private List<String> blockedCommands;
     private CommandMap commandMap;
 
     /**
@@ -32,6 +37,14 @@ public class CommandManager extends Module {
     @Override
     protected void start() {
         localCommands = Lists.newArrayList();
+        blockedCommands = Lists.newArrayList();
+
+        blockedCommands.add("pl");
+        blockedCommands.add("help");
+        blockedCommands.add("plugins");
+        blockedCommands.add("say");
+        blockedCommands.add("me");
+        //todo add more blocked commands
 
         try {
             final Field commandMap = plugin.getServer().getClass().getDeclaredField("commandMap");
@@ -95,6 +108,16 @@ public class CommandManager extends Module {
         if (commandMap == null)
             return;
         this.commandMap.getCommand(command.getLabel()).unregister(commandMap);
+    }
+
+    @EventHandler
+    public void processCommand(PlayerCommandPreprocessEvent e) {
+        Account account = plugin.getAccountManager().getAccount(e.getPlayer());
+
+        if (blockedCommands.contains(e.getMessage().split(" ")[0].substring(1))) {
+            e.setCancelled(true);
+            account.sendMessage("This command is blocked."); //todo better message, maybe unknown command message
+        }
     }
 
 }
