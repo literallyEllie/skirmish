@@ -37,11 +37,9 @@ public class CommandHeal extends Command {
             }
         }
 
-
-        if (target == account) {
+        message(sender, "Healed player " + target.getName());
+        if (target != account) {
             message(target, "You have been healed!");
-        } else {
-            message(sender, "Healed player " + target.getName());
         }
 
         target.getPlayer().setHealth(target.getPlayer().getMaxHealth());
