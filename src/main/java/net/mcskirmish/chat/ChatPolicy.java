@@ -2,6 +2,7 @@ package net.mcskirmish.chat;
 
 import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;
+import net.mcskirmish.util.C;
 import net.mcskirmish.util.UtilServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,7 +20,7 @@ public class ChatPolicy {
      */
     public ChatPolicy() {
         this.format = "{display}" + ChatColor.DARK_GRAY + "> {message}";
-        this.chatDelay = 1;
+        this.chatDelay = 3;
         this.requiredRank = Rank.PLAYER;
     }
 
@@ -41,8 +42,7 @@ public class ChatPolicy {
 
     public void setChatDelay(String executorName, boolean silent, int delay) {
         if (!silent) {
-            // todo
-            UtilServer.broadcast("..");
+            UtilServer.broadcast(C.IV + executorName + C.IC + " has set the chat delay to " + C.IV + delay + " seconds.");
         }
 
         this.chatDelay = delay;
@@ -54,19 +54,20 @@ public class ChatPolicy {
 
     public void setRequiredRank(String executorName, boolean silent, Rank rank) {
         if (!silent) {
-            // todo
-            UtilServer.broadcast("..");
+            UtilServer.broadcast(C.IV + executorName + C.IC + " has set the minimum required rank to chat to " + (rank.isDefault() ? rank.getRankColor() + rank.getName() : rank.getPrefix() + "+!"));
         }
 
         this.requiredRank = rank;
     }
 
-    public void clearChat(String executor) {
+    public void clearChat(String executorName, boolean silent) {
+        if (!silent) {
+            UtilServer.broadcast(C.IV + executorName + C.IC + " has cleared the chat.");
+        }
+
         for (int i = 0; i < 100; i++) {
             Bukkit.broadcastMessage("");
         }
-
-        UtilServer.broadcast("...");
     }
 
     public boolean hasRankRequire() {

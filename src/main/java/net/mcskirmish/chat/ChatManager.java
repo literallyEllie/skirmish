@@ -6,6 +6,7 @@ import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;
 import net.mcskirmish.chat.command.CommandChat;
+import net.mcskirmish.util.C;
 import net.mcskirmish.util.P;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -48,6 +49,21 @@ public class ChatManager extends Module implements IInteractive {
     public void onChat(AsyncPlayerChatEvent event) {
         final Player player = event.getPlayer();
         Account account = plugin.getAccountManager().getAccount(player.getPlayer());
+
+        if (!chatPolicy.hasRankRequire()) {
+            message(account, C.IC + "You do not have permission to speak! You need " + C.IV + chatPolicy.getRequiredRank().getPrefix() + "+!");
+            event.setCancelled(true);
+            return;
+        }
+
+        if (chatPolicy.hasChatDelay()) {
+            if (account.isCooldownActive("Chat", false)) {
+                event.setCancelled(true);
+                return;
+            }
+
+            account.addCooldown("Chat", chatPolicy.getChatDelay());
+        }
 
         // fallback format
         event.setFormat(player.getDisplayName() + ChatColor.DARK_GRAY + ": " + ChatColor.RESET + " %2$s");

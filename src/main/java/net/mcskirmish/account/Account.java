@@ -2,10 +2,14 @@ package net.mcskirmish.account;
 
 import com.google.common.collect.Lists;
 import net.mcskirmish.IInteractive;
+import net.mcskirmish.util.C;
+import net.mcskirmish.util.UtilTime;
 import org.bson.Document;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -27,6 +31,7 @@ public class Account {
     private final Document document;
 
     private Player player;
+    private HashMap<String, Long> cooldowns;
 
     /**
      * Represents an account and personal data of a user.
@@ -40,6 +45,7 @@ public class Account {
     public Account(AccountManager accountManager, Document document) {
         this.accountManager = accountManager;
         this.document = document;
+        this.cooldowns = new HashMap<>();
     }
 
     public static Account newAccount(AccountManager accountManager, UUID uuid, String name, String ip) {
@@ -172,32 +178,24 @@ public class Account {
         interactive.message(player, message);
     }
 
-    /*
-    public long getLastUse(String key) {
-        if (!hasAttribute(LAST_USE))
-            return -1;
-        final List<Long> lastUse = document.get(LAST_USE, Long.class);
-        return Long.parseLong(dataAttribute.asM().getOrDefault(key, "-1"));
+    public void addCooldown(String name, double seconds) {
+        if (cooldowns.containsKey(name)) {
+            cooldowns.remove(name);
+        }
+        cooldowns.put(name, (long) (System.currentTimeMillis() + (seconds*1000)));
     }
 
-    public void setLastUseNow(String key) {
-        setLastUse(key, System.currentTimeMillis());
+    public long getCooldown(String name) {
+        return cooldowns.get(name);
     }
 
-    public void setLastUse(String key, long when) {
-        if (!hasAttribute(LAST_USE)) {
-            attributes.put(LAST_USE, new DataAttribute(Maps.newHashMap()));
+    public boolean isCooldownActive(String name, boolean silent) {
+        boolean active = cooldowns.containsKey(name) && System.currentTimeMillis() - cooldowns.get(name) > 0;
+        if (active && !silent) {
+            sendMessage(C.V + name + C.C + " is on cooldown for " + C.V + (System.currentTimeMillis() - cooldowns.get(name)) / 1000 + " seconds.");
         }
 
-        final Map<String, String> uses = get(LAST_USE).asM();
-        uses.put(key, String.valueOf(when));
-        set(key, new DataAttribute(uses));
+        return active;
     }
-
-    public boolean hasUsedBefore(String key) {
-        return hasAttribute(LAST_USE) && get(LAST_USE).asM().containsKey(key);
-    }
-
-     */
 
 }

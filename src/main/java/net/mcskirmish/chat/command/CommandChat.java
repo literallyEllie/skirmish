@@ -20,7 +20,7 @@ public class CommandChat extends Command {
         ChatPolicy policy = plugin.getChatManager().getChatPolicy();
 
         if (args[0].equalsIgnoreCase("clear")) {
-            policy.clearChat(sender.getName());
+            policy.clearChat(sender.getName(), false);
             return;
         }
 
