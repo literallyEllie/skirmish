@@ -19,7 +19,8 @@ public class StaffManager extends Module {
     @Override
     protected void start() {
         plugin.getCommandManager().registerCommands(
-                new CommandRank(plugin), new CommandHeal(plugin), new CommandFly(plugin), new CommandFeed(plugin), new CommandClearInventory(plugin), new CommandGameMode(plugin)
+                new CommandRank(plugin), new CommandHeal(plugin), new CommandFly(plugin), new CommandFeed(plugin),
+                new CommandClearInventory(plugin), new CommandGameMode(plugin), new CommandBroadcast(plugin)
         );
 
         // staff chat init

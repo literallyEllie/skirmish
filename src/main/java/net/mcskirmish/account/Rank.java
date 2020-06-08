@@ -11,6 +11,7 @@ public enum Rank {
     YOUTUBE("YouTube", ChatColor.WHITE),
     TWITCH("Twitch", ChatColor.DARK_PURPLE),
     MODERATOR("Mod", ChatColor.YELLOW),
+    DEVELOPER("Developer", ChatColor.BLUE),
     ADMIN("Admin", ChatColor.RED),
     OWNER("Owner", ChatColor.DARK_RED);
 

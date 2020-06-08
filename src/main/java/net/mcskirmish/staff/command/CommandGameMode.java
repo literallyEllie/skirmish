@@ -14,7 +14,8 @@ import org.bukkit.entity.Player;
 public class CommandGameMode extends Command {
 
     public CommandGameMode(SkirmishPlugin plugin) {
-        super(plugin, "Gamemode", "Sets a players gamemode", Rank.ADMIN, Lists.newArrayList("gm"), "<creative/survival/adventure/spectator>", "[player]");
+        super(plugin, "Gamemode", "Sets a players gamemode", Rank.ADMIN, Lists.newArrayList("gm"),
+                "<creative | survival | adventure | spectator>", "[player]");
     }
 
     @Override

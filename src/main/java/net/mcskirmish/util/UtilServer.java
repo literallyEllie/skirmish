@@ -15,7 +15,7 @@ public class UtilServer {
     public static void broadcast(String string) {
         // TODO
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage(string);
         Bukkit.broadcastMessage("");
     }
 

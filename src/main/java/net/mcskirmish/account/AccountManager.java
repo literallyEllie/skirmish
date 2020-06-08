@@ -15,16 +15,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class AccountManager extends Module {
 
+    private static final long STARTUP_TIME = TimeUnit.SECONDS.toMillis(3);
     private static final String FAIL_LOG = "DB_FAILS.txt";
 
     private final Object loadLock = new Object();
@@ -60,6 +63,11 @@ public class AccountManager extends Module {
 
     @EventHandler
     public void onPreJoin(AsyncPlayerPreLoginEvent event) {
+        if (!UtilTime.elapsed(plugin.getServerStart(), STARTUP_TIME)) {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatColor.RED + "Server is starting up still, try again shortly...");
+            return;
+        }
+
         final UUID uuid = event.getUniqueId();
         final String name = event.getName();
         final String ip = event.getAddress().getHostAddress();

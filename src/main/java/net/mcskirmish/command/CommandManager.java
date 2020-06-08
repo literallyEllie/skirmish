@@ -4,20 +4,25 @@ import com.google.common.collect.Lists;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
+import net.mcskirmish.command.commands.CommandHelp;
+import net.mcskirmish.command.commands.CommandList;
+import net.mcskirmish.command.commands.CommandVersion;
 import net.md_5.bungee.event.EventHandler;
 import org.bukkit.command.CommandMap;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 public class CommandManager extends Module {
 
     private static final String COMMAND_ID = "skirmish";
 
     private List<Command> localCommands;
-    private List<String> blockedCommands;
-    private CommandMap commandMap;
+    private Map<String, Command> knownCommands;
+    private SimpleCommandMap commandMap;
 
     /**
      * Handles all API commands.
@@ -36,23 +41,31 @@ public class CommandManager extends Module {
     @Override
     protected void start() {
         localCommands = Lists.newArrayList();
-        blockedCommands = Lists.newArrayList();
-
-        blockedCommands.add("pl");
-        blockedCommands.add("help");
-        blockedCommands.add("plugins");
-        blockedCommands.add("say");
-        blockedCommands.add("me");
-        blockedCommands.add("?");
-        //todo add more blocked commands
 
         try {
-            final Field commandMap = plugin.getServer().getClass().getDeclaredField("commandMap");
-            commandMap.setAccessible(true);
-            this.commandMap = (CommandMap) commandMap.get(plugin.getServer());
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            plugin.error("failed to get commandMap", e);
+            Field commandField = plugin.getServer().getClass().getDeclaredField("commandMap");
+            commandField.setAccessible(true);
+            commandMap = (SimpleCommandMap) commandField.get(plugin.getServer());
+            // for vanilla
+            Field knownField = commandMap.getClass().getDeclaredField("knownCommands");
+            knownField.setAccessible(true);
+            knownCommands = (Map<String, Command>) knownField.get(commandMap);
+        } catch (NoSuchFieldException | NullPointerException | IllegalAccessException e) {
+            plugin.error("failed to get knownCommands from commandMap", e);
         }
+
+        // unregister vanilla
+        unregisterVanilla("reload");
+        unregisterVanilla("rl");
+        unregisterVanilla("version");
+        unregisterVanilla("ver");
+        unregisterVanilla("about");
+        unregisterVanilla("me");
+        unregisterVanilla("help");
+        unregisterVanilla("?");
+
+        // register core commands
+        registerCommands(new CommandVersion(plugin), new CommandHelp(plugin), new CommandList(plugin));
     }
 
     @Override
@@ -82,15 +95,12 @@ public class CommandManager extends Module {
      * @param commands commands to register
      */
     public void registerCommands(Command... commands) {
-        if (commandMap == null)
-            return;
-
         for (Command command : commands) {
             if (localCommands.contains(command)) {
                 continue;
             }
 
-            this.commandMap.register(COMMAND_ID, command);
+            commandMap.register(command.getLabel(), COMMAND_ID, command);
             this.localCommands.add(command);
         }
     }
@@ -105,20 +115,28 @@ public class CommandManager extends Module {
         if (!safe)
             this.localCommands.remove(command);
 
-        if (commandMap == null)
-            return;
-        this.commandMap.getCommand(command.getLabel()).unregister(commandMap);
+        command.unregister(commandMap);
     }
 
-    @EventHandler
-    public void processCommand(PlayerCommandPreprocessEvent e) {
-        Account account = plugin.getAccountManager().getAccount(e.getPlayer());
-        String cmd = e.getMessage().split(" ")[0].substring(1);
+    public void unregisterVanilla(String label) {
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            /*
+            final org.bukkit.command.Command plainCmd = commandMap.getCommand(label);
+            if (plainCmd != null)
+                plainCmd.unregister(commandMap);
+            final org.bukkit.command.Command minecraftCmd = commandMap.getCommand("minecraft:" + label);
+            if (minecraftCmd != null)
+                minecraftCmd.unregister(commandMap);
+            final org.bukkit.command.Command bukkitCmd = commandMap.getCommand("bukkit:" + label);
+            if (bukkitCmd != null)
+                bukkitCmd.unregister(commandMap);
 
-        if (blockedCommands.contains(cmd) || cmd.contains(":")) {
-            account.sendMessage("This command is blocked."); //todo better message, maybe unknown command message
-            e.setCancelled(true);
-        }
+             */
+
+            knownCommands.remove(label);
+            knownCommands.remove("minecraft:" + label);
+            knownCommands.remove("bukkit:" + label);
+        }, 1L);
     }
 
 }

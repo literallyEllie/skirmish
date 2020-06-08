@@ -5,6 +5,7 @@ import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;
+import net.mcskirmish.chat.command.CommandChat;
 import net.mcskirmish.util.P;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -39,6 +40,8 @@ public class ChatManager extends Module implements IInteractive {
     @Override
     protected void start() {
         chatPolicy = new ChatPolicy();
+
+        plugin.getCommandManager().registerCommands(new CommandChat(plugin));
     }
 
     @EventHandler

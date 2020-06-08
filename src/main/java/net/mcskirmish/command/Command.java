@@ -140,7 +140,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
             run(sender, account, commandLabel, args);
         } catch (Throwable throwable) {
             plugin.error("error executing command " + getLabel(), throwable);
-            sender.sendMessage(C.IV + "There was an error executing that command, report to a member of staff");
+            message(sender, C.IV + "There was an error executing that command, report to a member of staff");
             return false;
         }
 

@@ -10,4 +10,8 @@ public class UtilTime {
         return FULL_DATE.format(System.currentTimeMillis());
     }
 
+    public static boolean elapsed(long from, long required) {
+        return System.currentTimeMillis() - from > required;
+    }
+
 }
