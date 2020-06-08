@@ -5,7 +5,6 @@ import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
 import net.md_5.bungee.event.EventHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
@@ -44,6 +43,7 @@ public class CommandManager extends Module {
         blockedCommands.add("plugins");
         blockedCommands.add("say");
         blockedCommands.add("me");
+        blockedCommands.add("?");
         //todo add more blocked commands
 
         try {
@@ -113,10 +113,11 @@ public class CommandManager extends Module {
     @EventHandler
     public void processCommand(PlayerCommandPreprocessEvent e) {
         Account account = plugin.getAccountManager().getAccount(e.getPlayer());
+        String cmd = e.getMessage().split(" ")[0].substring(1);
 
-        if (blockedCommands.contains(e.getMessage().split(" ")[0].substring(1))) {
-            e.setCancelled(true);
+        if (blockedCommands.contains(cmd) || cmd.contains(":")) {
             account.sendMessage("This command is blocked."); //todo better message, maybe unknown command message
+            e.setCancelled(true);
         }
     }
 

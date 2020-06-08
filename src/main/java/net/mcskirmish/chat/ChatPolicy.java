@@ -3,6 +3,7 @@ package net.mcskirmish.chat;
 import net.mcskirmish.account.Account;
 import net.mcskirmish.account.Rank;
 import net.mcskirmish.util.UtilServer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class ChatPolicy {
@@ -58,6 +59,14 @@ public class ChatPolicy {
         }
 
         this.requiredRank = rank;
+    }
+
+    public void clearChat(String executor) {
+        for (int i = 0; i < 100; i++) {
+            Bukkit.broadcastMessage("");
+        }
+
+        UtilServer.broadcast("...");
     }
 
     public boolean hasRankRequire() {

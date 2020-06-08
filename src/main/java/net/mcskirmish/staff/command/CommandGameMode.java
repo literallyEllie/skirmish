@@ -7,7 +7,6 @@ import net.mcskirmish.account.Rank;
 import net.mcskirmish.command.Command;
 import net.mcskirmish.util.C;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,13 +21,17 @@ public class CommandGameMode extends Command {
     public void run(CommandSender sender, Account account, String usedLabel, String[] args) {
         Player target;
         GameMode mode = null;
+        String modeString = args[0].toLowerCase();
 
-        if (args[0].matches("survival|s|0")) mode = GameMode.SURVIVAL;
-        if (args[0].matches("creative|c|1")) mode = GameMode.CREATIVE;
-        if (args[0].matches("adventure|a|2")) mode = GameMode.ADVENTURE;
-        if (args[0].matches("spectator|spec|3")) mode = GameMode.SPECTATOR;
-
-        if (mode == null) {
+        if (modeString.matches("survival|s|0")) {
+            mode = GameMode.SURVIVAL;
+        } else if (modeString.matches("creative|c|1")) {
+            mode = GameMode.CREATIVE;
+        } else if (modeString.matches("adventure|a|2")) {
+            mode = GameMode.ADVENTURE;
+        } else if (modeString.matches("spectator|spec|3")) {
+            mode = GameMode.SPECTATOR;
+        } else {
             couldNotFind(sender, "Gamemode " + args[0]);
             return;
         }
