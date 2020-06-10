@@ -6,6 +6,7 @@ public class M {
 
     public static final String NO_PERM = P.DENIED + C.IC + "You do not have permission.";
     public static final String NO_FOUND = C.IC + "Could not find " + C.V;
+
     /**
      * Generic messages of the server.
      * <p>

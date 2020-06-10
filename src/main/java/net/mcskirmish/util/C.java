@@ -12,6 +12,7 @@ public class C {
     public static final String IC = ChatColor.GRAY.toString();
     // important var
     public static final String IV = ChatColor.RED.toString();
+
     /**
      * Represents the general network color scheme
      */

@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
 import net.mcskirmish.command.Command;
 import net.mcskirmish.util.C;
 import org.bukkit.command.CommandSender;

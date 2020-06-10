@@ -3,14 +3,10 @@ package net.mcskirmish.command;
 import com.google.common.collect.Lists;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
-import net.mcskirmish.account.Account;
 import net.mcskirmish.command.commands.CommandHelp;
 import net.mcskirmish.command.commands.CommandList;
 import net.mcskirmish.command.commands.CommandVersion;
-import net.md_5.bungee.event.EventHandler;
-import org.bukkit.command.CommandMap;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.lang.reflect.Field;
 import java.util.List;

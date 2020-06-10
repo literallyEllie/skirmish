@@ -3,6 +3,7 @@ package net.mcskirmish.account;
 import com.google.common.collect.Maps;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
+import net.mcskirmish.account.sync.RedisAccountSynchronizer;
 import net.mcskirmish.mongo.table.AccountsRepository;
 import net.mcskirmish.server.ServerManager;
 import net.mcskirmish.util.C;
@@ -15,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.io.File;
@@ -33,6 +33,8 @@ public class AccountManager extends Module {
     private final Object loadLock = new Object();
     private AccountsRepository repo;
     private Map<UUID, Account> accounts;
+
+    private RedisAccountSynchronizer accountSynchronizer;
 
     /**
      * Data manager that loads and saves data fields of a player.
@@ -59,6 +61,7 @@ public class AccountManager extends Module {
     protected void start() {
         accounts = Maps.newHashMap();
         repo = new AccountsRepository(plugin);
+        accountSynchronizer = new RedisAccountSynchronizer(plugin, this);
     }
 
     @EventHandler
@@ -245,6 +248,7 @@ public class AccountManager extends Module {
                 if (!success) {
                     logDbError(UtilTime.fullDate() + " FAILED UPDATE '" + key + "': '" + attribute + "' to " + repo.getRepository() + " for " + account.getUuid());
                 }
+
             });
 
         }

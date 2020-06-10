@@ -19,7 +19,7 @@ public class CommandBroadcast extends Command {
 
     @Override
     public void run(CommandSender sender, Account account, String usedLabel, String[] args) {
-        UtilServer.broadcast( C.IV + ChatColor.BOLD + sender.getName() + ": " + ChatColor.RESET +
+        UtilServer.broadcast(C.IV + ChatColor.BOLD + sender.getName() + ": " + ChatColor.RESET +
                 ChatColor.translateAlternateColorCodes('&', Joiner.on(" ").join(args)));
     }
 
