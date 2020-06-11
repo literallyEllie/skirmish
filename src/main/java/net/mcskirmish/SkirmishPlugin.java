@@ -57,7 +57,7 @@ public abstract class SkirmishPlugin extends JavaPlugin {
 
         // finish startup
         startupTime = System.currentTimeMillis() - serverStart;
-        log(getDescription().getName() + " v" + getDescription().getVersion() + " loaded in " + startupTime + " ms");
+        log(getDescription().getName() + " v" + getDescription().getVersion() + " loaded in " + startupTime + "ms");
     }
 
     @Override

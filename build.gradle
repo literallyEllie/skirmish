@@ -1,9 +1,10 @@
 plugins {
     id 'java'
     id "com.github.johnrengelman.shadow" version '5.2.0'
+    id 'maven'
 }
 
-group 'network.skirmish'
+group 'net.mcskirmish'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -66,3 +67,14 @@ dependencies {
 shadowJar {
     archiveName = "Skirmish-${version}.jar"
 }
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "https://mcskirmish-maven.ew.r.appspot.com/") {
+                authentication(userName: System.getenv("SKIRM_USER"), password: System.getenv("SKIRM_PASS"))
+            }
+        }
+    }
+}
+

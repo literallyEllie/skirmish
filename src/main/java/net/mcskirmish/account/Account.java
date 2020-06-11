@@ -3,13 +3,11 @@ package net.mcskirmish.account;
 import com.google.common.collect.Lists;
 import net.mcskirmish.IInteractive;
 import net.mcskirmish.util.C;
-import net.mcskirmish.util.UtilTime;
 import org.bson.Document;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -36,7 +34,7 @@ public class Account {
     /**
      * Represents an account and personal data of a user.
      * <p>
-     * All primitive data is stored in a BSON {@link Document} which is recieved from the database
+     * All primitive data is stored in a BSON {@link Document} which is received from the database
      * upon getting via {@link AccountManager#getAccount(UUID, boolean)
      *
      * @param accountManager instance of the account manager
@@ -179,10 +177,7 @@ public class Account {
     }
 
     public void addCooldown(String name, double seconds) {
-        if (cooldowns.containsKey(name)) {
-            cooldowns.remove(name);
-        }
-        cooldowns.put(name, (long) (System.currentTimeMillis() + (seconds*1000)));
+        cooldowns.put(name, (long) (System.currentTimeMillis() + (seconds * 1000)));
     }
 
     public long getCooldown(String name) {

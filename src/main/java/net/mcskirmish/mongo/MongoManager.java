@@ -46,7 +46,7 @@ public class MongoManager extends Module {
 
             MongoCredential credential = MongoCredential.createCredential(
                     values.get("username"),
-                    values.get("database"),
+                    values.get(plugin.isDevServer() ? DB_DEVELOPMENT : DB_PRODUCTION),
                     values.get("password").toCharArray()
             );
 
@@ -58,9 +58,7 @@ public class MongoManager extends Module {
                             .build()
             );
 
-
             database = client.getDatabase(plugin.isDevServer() ? DB_DEVELOPMENT : DB_PRODUCTION);
-
         } catch (IOException e) {
             plugin.error("failed to load mongo credentials", e);
         }
