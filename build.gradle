@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id "com.github.johnrengelman.shadow" version '5.2.0'
     id 'maven'
+    id 'maven-publish'
 }
 
 group 'net.mcskirmish'
@@ -10,11 +11,24 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+ext {
+    skirmishRepo = "https://mcskirmish-maven.ew.r.appspot.com/"
+    skirmishUser = System.getenv("SKIRM_USER")
+    skirmishPass = System.getenv("SKIRM_PASS")
+}
+
 repositories {
     mavenCentral()
 
-    /* Spigot */
-    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+    /* PaperMC */
+    maven {
+        credentials {
+            username skirmishUser
+            password skirmishPass
+        }
+        url skirmishRepo
+    }
+
     /* Waterfall (Proxy) */
     maven { url 'https://papermc.io/repo/repository/maven-snapshots/' }
 
@@ -32,8 +46,8 @@ repositories {
 
 dependencies {
     /* Provided Libs */
-    /* Spigot */
-    compileOnly(group: 'org.spigotmc', name: 'spigot-api', version: '1.8.8-R0.1-SNAPSHOT') {
+    /* PaperSpigot */
+    compileOnly(group: 'com.destroystokyo.paper', name: 'paper-api', version: '1.8.8-R0.1-SNAPSHOT') {
         exclude group: 'net.md-5'
         exclude group: 'org.avaje'
     }
@@ -65,16 +79,44 @@ dependencies {
 }
 
 shadowJar {
-    archiveName = "Skirmish-${version}.jar"
+    archiveName = "SkirmishAPI-${version}.jar"
 }
 
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: "https://mcskirmish-maven.ew.r.appspot.com/") {
-                authentication(userName: System.getenv("SKIRM_USER"), password: System.getenv("SKIRM_PASS"))
+            repository(url: skirmishRepo) {
+                authentication(userName: skirmishUser, password: skirmishPass)
             }
         }
     }
 }
 
+// Publishing script for sourcing dependencies
+publishing {
+    def localGroupId = ""
+    def localArtifactId = ""
+    def localVersion = ""
+    def localPath = ""
+
+    publications {
+        mavenJava(MavenPublication) {
+            create('.jar', MavenPublication) {
+                groupId localGroupId
+                artifactId localArtifactId
+                version localVersion
+                artifact new File(localPath)
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            credentials {
+                username System.getenv("SKIRM_USER")
+                password System.getenv("SKIRM_PASS")
+            }
+            url 'https://mcskirmish-maven.ew.r.appspot.com/'
+        }
+    }
+}

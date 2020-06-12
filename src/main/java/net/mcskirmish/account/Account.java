@@ -46,6 +46,24 @@ public class Account {
         this.cooldowns = new HashMap<>();
     }
 
+    /**
+     * Creates a new account instance presuming the account is being created <b>now</b>
+     * Typically called on {@link org.bukkit.event.player.AsyncPlayerPreLoginEvent}
+     *
+     * Default values set:
+     * - Name
+     * - Name in lower-case
+     * - Empty list of previous names
+     * - First login ({@link System#currentTimeMillis()})
+     * - Singleton list of their connected IP
+     * - Their rank as {@link Rank#PLAYER}
+     *
+     * @param accountManager account manager instance
+     * @param uuid the uuid of the player
+     * @param name the connecting name of the player
+     * @param ip the the player is connecting with
+     * @return default account instance
+     */
     public static Account newAccount(AccountManager accountManager, UUID uuid, String name, String ip) {
         Document document = new Document(ID, uuid)
                 .append(NAME, name)
