@@ -7,8 +7,11 @@ import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 
-public class CylindricalRegion extends Region {
+@SerializableAs("CylindricalRegion")
+public class CylindricalRegion extends Region implements ConfigurationSerializable {
 
     private String worldName;
     private RegionPoint center;

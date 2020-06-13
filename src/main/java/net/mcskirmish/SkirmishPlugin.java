@@ -6,6 +6,7 @@ import net.mcskirmish.chat.ChatManager;
 import net.mcskirmish.command.CommandManager;
 import net.mcskirmish.mongo.MongoManager;
 import net.mcskirmish.redis.RedisManager;
+import net.mcskirmish.region.RegionManager;
 import net.mcskirmish.server.ServerManager;
 import net.mcskirmish.staff.StaffManager;
 import org.bukkit.event.Listener;
@@ -25,6 +26,7 @@ public abstract class SkirmishPlugin extends JavaPlugin {
     private CommandManager commandManager;
     private ChatManager chatManager;
     private StaffManager staffManager;
+    private RegionManager regionManager;
 
     private boolean isLocalServer, isDevServer, isNetworkingServer, isLobbyServer;
     private long serverStart, startupTime;
@@ -47,6 +49,7 @@ public abstract class SkirmishPlugin extends JavaPlugin {
         commandManager = new CommandManager(this);
         chatManager = new ChatManager(this);
         staffManager = new StaffManager(this);
+        regionManager = new RegionManager(this);
 
         // startup underlying
         try {
@@ -122,6 +125,10 @@ public abstract class SkirmishPlugin extends JavaPlugin {
 
     public StaffManager getStaffManager() {
         return staffManager;
+    }
+    
+    public RegionManager getRegionManager() {
+        return regionManager;
     }
 
     public boolean isLocalServer() {

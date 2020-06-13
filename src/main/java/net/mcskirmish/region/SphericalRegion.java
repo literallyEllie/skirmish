@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 
-public class SphericalRegion extends Region {
+@SerializableAs("SphericalRegion")
+public class SphericalRegion extends Region implements ConfigurationSerializable {
 
     private String worldName;
     private RegionPoint center;

@@ -22,6 +22,16 @@ import net.mcskirmish.region.events.RegionEventExecutor;
 
 public abstract class Region {
 
+    private String regionName;
+    
+    public String getRegionName() {
+        return regionName;
+    }
+
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
+    }
+
     public World getWorld() {
         return Bukkit.getWorld(getWorldName());
     }
