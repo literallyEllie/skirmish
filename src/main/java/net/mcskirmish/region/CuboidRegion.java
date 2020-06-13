@@ -120,6 +120,9 @@ public class CuboidRegion extends Region implements ConfigurationSerializable {
     }
 
     public boolean contains(Point point) {
+        if (!point.getWorldName().equals(getWorldName())) {
+            return false;
+        }
         return getFirstCorner().sub(point).isNegative() && getSecondCorner().sub(point).isPositive();
     }
 

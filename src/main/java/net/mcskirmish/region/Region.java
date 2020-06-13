@@ -13,7 +13,12 @@ import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.Plugin;
+
+import net.mcskirmish.region.events.RegionListenerType;
+import net.mcskirmish.region.events.RegionEventExecutor;
 
 public abstract class Region {
 
@@ -26,13 +31,13 @@ public abstract class Region {
     public abstract List<RegionPoint> getPoints();
 
     public abstract double distance(Point point);
-    
+
     public double distance(Location location) {
         return distance(new Point(location));
     }
-    
+
     public abstract double distance(Region region);
-    
+
     public abstract boolean contains(Point... points);
 
     public abstract boolean contains(Location location);
@@ -44,15 +49,22 @@ public abstract class Region {
     public boolean isPlayerInside(Player player) {
         return contains(player.getLocation());
     }
-    
+
     public abstract RegionPoint getCenter();
 
-    public void registerListener(RegionListenerType rlt, Consumer<PlayerMoveEvent> listener) {
-        throw new NotImplementedException();
-    }
-
-    public <E extends Event> boolean registerListener(Class<E> eventType, Consumer<E> listener){
-        throw new NotImplementedException();
+    /**
+     * Registers a custom Region Listener with {@link RegionEventExecutor} as
+     * EventExecutor
+     * 
+     * @param rlt Type of Region Listener (e.g.
+     *            {@linkplain RegionListenerType#ENTER_REGION})
+     */
+    public <EventType extends Event> void registerListener(RegionListenerType<EventType> rlt, Plugin plugin,
+            Consumer<EventType> listener) {
+        Bukkit
+                .getPluginManager()
+                .registerEvent(rlt.getEventClass(), null, EventPriority.NORMAL,
+                        new RegionEventExecutor<EventType>(rlt, this, listener), plugin);
     }
 
     /**

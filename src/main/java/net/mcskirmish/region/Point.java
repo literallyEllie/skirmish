@@ -102,6 +102,14 @@ public class Point implements ConfigurationSerializable {
                 getZ() + otherPoint.getZ());
     }
 
+    public Point mul(double mul) {
+        return new Point(getWorldName(), getX() * mul, getY() * mul, getZ() * mul);
+    }
+
+    public Point div(double div) {
+        return new Point(getWorldName(), getX() / div, getY() / div, getZ() / div);
+    }
+
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> serialized = new HashMap<String, Object>();
