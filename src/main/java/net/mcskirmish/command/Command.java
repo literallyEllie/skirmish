@@ -35,9 +35,9 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
      * @param rank        the minimum rank required to execute the command
      * @param aliases     aliases of the command
      * @param usage       the varargs usage of the command in the format of:
-     *                    "<...>", "[...]" etc.
-     *                    Where <..> represents mandatory fields
-     *                    And [..] represents optional fields
+     *                    <b>&lt;..&gt;</b>, <b>[..]</b> etc.
+     *                    Where <b>&lt;..&gt;</b> represents mandatory fields
+     *                    And <b>[..]</b> represents optional fields
      *                    All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
      */
     public Command(SkirmishPlugin plugin, String name, String description, Rank rank, List<String> aliases, String... usage) {
@@ -60,9 +60,9 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
      * @param description brief description of what the command does
      * @param aliases     aliases of the command
      * @param usage       the varargs usage of the command in the format of:
-     *                    "<...>", "[...]" etc.
-     *                    Where <..> represents mandatory fields
-     *                    And [..] represents optional fields
+     *                    <b>&lt;..&gt;</b>, <b>[..]</b> etc.
+     *                    Where <b>&lt;..&gt;</b> represents mandatory fields
+     *                    And <b>[..]</b> represents optional fields
      *                    All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
      */
     public Command(SkirmishPlugin plugin, String name, String description, List<String> aliases, String... usage) {
@@ -77,9 +77,9 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
      * @param description brief description of what the command does
      * @param rank        the minimum rank required to execute the command
      * @param usage       the varargs usage of the command in the format of:
-     *                    "<...>", "[...]" etc.
-     *                    Where <..> represents mandatory fields
-     *                    And [..] represents optional fields
+     *                    <b>&lt;..&gt;</b>, <b>[..]</b> etc.
+     *                    Where <b>&lt;..&gt;</b> represents mandatory fields
+     *                    And <b>[..]</b> represents optional fields
      *                    All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
      */
     public Command(SkirmishPlugin plugin, String name, String description, Rank rank, String... usage) {

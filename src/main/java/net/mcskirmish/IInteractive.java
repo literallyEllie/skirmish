@@ -37,6 +37,7 @@ public interface IInteractive {
      * It is null safe
      *
      * @param sender  the sender to send to (can be null)
+     * @param prefix  a custom prefix to send instead of {@link IInteractive#getPrefix()}
      * @param message the message to send
      */
     default void message(CommandSender sender, String prefix, String message) {

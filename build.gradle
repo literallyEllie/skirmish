@@ -1,7 +1,7 @@
 plugins {
     id 'java'
+    id 'java-library'
     id "com.github.johnrengelman.shadow" version '5.2.0'
-    id 'maven'
     id 'maven-publish'
 }
 
@@ -11,26 +11,20 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-ext {
-    skirmishRepo = "https://mcskirmish-maven.ew.r.appspot.com/"
-    skirmishUser = System.getenv("SKIRM_USER")
-    skirmishPass = System.getenv("SKIRM_PASS")
-}
-
 repositories {
     mavenCentral()
 
     /* PaperMC */
     maven {
         credentials {
-            username skirmishUser
-            password skirmishPass
+            username skirmish_user
+            password skirmish_pass
         }
-        url skirmishRepo
+        url skirmish_repo
     }
 
     /* Waterfall (Proxy) */
-    maven { url 'https://papermc.io/repo/repository/maven-snapshots/' }
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
 
     /* Bundled Libs */
     /* ParticleAPI */
@@ -82,41 +76,49 @@ shadowJar {
     archiveName = "SkirmishAPI-${version}.jar"
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: skirmishRepo) {
-                authentication(userName: skirmishUser, password: skirmishPass)
-            }
-        }
-    }
+java {
+    withJavadocJar()
 }
 
-// Publishing script for sourcing dependencies
 publishing {
-    def localGroupId = ""
-    def localArtifactId = ""
-    def localVersion = ""
-    def localPath = ""
 
     publications {
         mavenJava(MavenPublication) {
-            create('.jar', MavenPublication) {
-                groupId localGroupId
-                artifactId localArtifactId
-                version localVersion
-                artifact new File(localPath)
-            }
+            from components.java
         }
     }
 
     repositories {
         maven {
             credentials {
-                username System.getenv("SKIRM_USER")
-                password System.getenv("SKIRM_PASS")
+                username skirmish_user
+                password skirmish_pass
             }
-            url 'https://mcskirmish-maven.ew.r.appspot.com/'
+
+            url skirmish_repo
         }
     }
+
 }
+
+// Publishing script for sourcing dependencies
+/*
+    publishing {
+        def localGroupId = ""
+        def localArtifactId = ""
+        def localVersion = ""
+        def localPath = ""
+
+        publications {
+            mavenJava(MavenPublication) {
+                create('.jar', MavenPublication) {
+                    groupId localGroupId
+                    artifactId localArtifactId
+                    version localVersion
+                    artifact new File(localPath)
+                }
+            }
+        }
+    }
+ */
+
