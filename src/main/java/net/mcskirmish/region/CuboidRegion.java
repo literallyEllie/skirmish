@@ -1,17 +1,14 @@
 package net.mcskirmish.region;
 
+import org.apache.commons.lang.Validate;
+import org.bukkit.Location;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
-
-import com.google.common.collect.Lists;
 
 @SerializableAs("CuboidRegion")
 public class CuboidRegion extends Region implements ConfigurationSerializable {

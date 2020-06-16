@@ -42,4 +42,8 @@ public abstract class Module implements Listener {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, runnable);
     }
 
+    public void runAsync(long delay, long period, Runnable runnable) {
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, runnable, delay, period);
+    }
+
 }

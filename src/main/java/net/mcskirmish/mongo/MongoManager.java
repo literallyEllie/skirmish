@@ -46,7 +46,7 @@ public class MongoManager extends Module {
 
             MongoCredential credential = MongoCredential.createCredential(
                     values.get("username"),
-                    values.get(plugin.isDevServer() ? DB_DEVELOPMENT : DB_PRODUCTION),
+                    plugin.isDevServer() ? DB_DEVELOPMENT : DB_PRODUCTION,
                     values.get("password").toCharArray()
             );
 

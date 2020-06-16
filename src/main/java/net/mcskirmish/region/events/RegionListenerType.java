@@ -1,18 +1,12 @@
 package net.mcskirmish.region.events;
 
-import java.util.function.Function;
-
+import net.mcskirmish.region.Region;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerBucketEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 
-import net.mcskirmish.region.Region;
+import java.util.function.Function;
 
 public final class RegionListenerType<EventType extends Event> {
 
@@ -71,7 +65,7 @@ public final class RegionListenerType<EventType extends Event> {
     }
 
     public RegionListenerType(Class<EventType> eventClass, Function<EventType, Location> locationConverter,
-            Function<Object[], Boolean> conditionCheck) {
+                              Function<Object[], Boolean> conditionCheck) {
         this(eventClass, locationConverter);
         this.conditionCheck = conditionCheck;
     }
@@ -88,7 +82,7 @@ public final class RegionListenerType<EventType extends Event> {
         if (conditionCheck == null) {
             return true;
         }
-        return conditionCheck.apply(new Object[] { event, region });
+        return conditionCheck.apply(new Object[]{event, region});
     }
 
 }

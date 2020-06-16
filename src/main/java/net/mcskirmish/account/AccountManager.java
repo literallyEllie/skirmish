@@ -4,7 +4,11 @@ import com.google.common.collect.Maps;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.sync.RedisAccountSynchronizer;
+import net.mcskirmish.event.SkirmishEvent;
 import net.mcskirmish.mongo.table.AccountsRepository;
+import net.mcskirmish.network.NetworkManager;
+import net.mcskirmish.network.event.PlayerQuitNetworkEvent;
+import net.mcskirmish.network.event.PlayerSwitchServerEvent;
 import net.mcskirmish.server.ServerManager;
 import net.mcskirmish.util.C;
 import net.mcskirmish.util.Domain;
@@ -125,6 +129,7 @@ public class AccountManager extends Module {
             // Set first time
             account.set(Account.FIRST_TIME, true, null, false);
             account.set(Account.LAST_SERVER, plugin.getServerManager().getServerId());
+            account.set(Account.DESTINATION_SERVER, NetworkManager.DEST_NONE);
 
             accounts.put(uuid, account);
             if (newAccount) {
@@ -153,7 +158,15 @@ public class AccountManager extends Module {
 
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
-        accounts.remove(event.getPlayer().getUniqueId());
+        final Account account = accounts.remove(event.getPlayer().getUniqueId());
+
+        // let everyone know where going next
+        if (account.getDestinationServer().equals(NetworkManager.DEST_NONE)) {
+            SkirmishEvent.callEvent(new PlayerQuitNetworkEvent(account));
+        } else {
+            SkirmishEvent.callEvent(new PlayerSwitchServerEvent(account, account.getDestinationServer()));
+        }
+
         event.setQuitMessage(null);
     }
 
@@ -248,7 +261,6 @@ public class AccountManager extends Module {
                 if (!success) {
                     logDbError(UtilTime.fullDate() + " FAILED UPDATE '" + key + "': '" + attribute + "' to " + repo.getRepository() + " for " + account.getUuid());
                 }
-
             });
 
         }

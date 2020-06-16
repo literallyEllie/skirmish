@@ -1,14 +1,13 @@
 package net.mcskirmish.region;
 
+import org.bukkit.Location;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Location;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
 
 @SerializableAs("CylindricalRegion")
 public class CylindricalRegion extends Region implements ConfigurationSerializable {
@@ -65,7 +64,9 @@ public class CylindricalRegion extends Region implements ConfigurationSerializab
         return worldName;
     }
 
-    /** Generates Points needed for {@link Region#contains(Region)} */
+    /**
+     * Generates Points needed for {@link Region#contains(Region)}
+     */
     @Override
     public List<RegionPoint> getPoints() {
         if (points == null) {

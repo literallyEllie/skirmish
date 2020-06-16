@@ -52,7 +52,7 @@ dependencies {
     /* Jedis */
     compile group: 'redis.clients', name: 'jedis', version: '3.3.0'
     /* MongoDB */
-    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.4'
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.5'
 
     /* Bundled Libs */
     /* Pretty Time */

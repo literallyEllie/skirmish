@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import net.mcskirmish.account.AccountManager;
 import net.mcskirmish.chat.ChatManager;
 import net.mcskirmish.command.CommandManager;
+import net.mcskirmish.event.update.Updater;
 import net.mcskirmish.mongo.MongoManager;
+import net.mcskirmish.network.NetworkManager;
 import net.mcskirmish.redis.RedisManager;
 import net.mcskirmish.region.RegionManager;
 import net.mcskirmish.server.ServerManager;
@@ -14,14 +16,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.logging.Level;
 
 public abstract class SkirmishPlugin extends JavaPlugin {
 
-    private final Collection<Module> modules = Lists.newArrayList();
+    private final Collection<Module> modules = Lists.newLinkedList();
     private MongoManager mongoManager;
     private RedisManager redisManager;
     private ServerManager serverManager;
+    private NetworkManager networkManager;
     private AccountManager accountManager;
     private CommandManager commandManager;
     private ChatManager chatManager;
@@ -45,6 +50,7 @@ public abstract class SkirmishPlugin extends JavaPlugin {
         mongoManager = new MongoManager(this);
         redisManager = new RedisManager(this);
         serverManager = new ServerManager(this);
+        networkManager = new NetworkManager(this);
         accountManager = new AccountManager(this);
         commandManager = new CommandManager(this);
         chatManager = new ChatManager(this);
@@ -57,6 +63,9 @@ public abstract class SkirmishPlugin extends JavaPlugin {
         } catch (Throwable throwable) {
             error("error starting up underlying plugin", throwable);
         }
+
+        // start updater
+        new Updater(this);
 
         // finish startup
         startupTime = System.currentTimeMillis() - serverStart;
@@ -72,14 +81,19 @@ public abstract class SkirmishPlugin extends JavaPlugin {
             error("error disabling underlying plugin", throwable);
         }
 
-        // disable modules
-        modules.forEach(module -> {
+        // disable modules in reverse order to keep most important alive
+        final Iterator<Module> moduleIterator = ((LinkedList<Module>) modules).descendingIterator();
+        while (moduleIterator.hasNext()) {
+            final Module module = moduleIterator.next();
+
             try {
                 module.stop();
             } catch (Throwable e) {
                 error("failed to stop module " + module.getName(), e);
+            } finally {
+                moduleIterator.remove();
             }
-        });
+        }
 
         // finish disable
         log(getDescription().getName() + "v " + getDescription().getVersion() + " disabled.");
@@ -111,6 +125,10 @@ public abstract class SkirmishPlugin extends JavaPlugin {
         return serverManager;
     }
 
+    public NetworkManager getNetworkManager() {
+        return networkManager;
+    }
+
     public AccountManager getAccountManager() {
         return accountManager;
     }
@@ -126,7 +144,7 @@ public abstract class SkirmishPlugin extends JavaPlugin {
     public StaffManager getStaffManager() {
         return staffManager;
     }
-    
+
     public RegionManager getRegionManager() {
         return regionManager;
     }

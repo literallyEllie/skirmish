@@ -39,8 +39,8 @@ public class ItemBuilder {
      * Utility for creating items easily.
      *
      * @param material the material to use
-     * @param amount the amount in the stack
-     * @param data the special data
+     * @param amount   the amount in the stack
+     * @param data     the special data
      */
     public ItemBuilder(Material material, int amount, byte data) {
         this.material = material;
@@ -50,11 +50,11 @@ public class ItemBuilder {
 
     /**
      * Utility for creating items easily.
-     *
+     * <p>
      * Sets the special data to 0.
      *
      * @param material the base material to use
-     * @param amount the amount in the stack
+     * @param amount   the amount in the stack
      */
     public ItemBuilder(Material material, int amount) {
         this(material, amount, (byte) 0);
@@ -62,7 +62,7 @@ public class ItemBuilder {
 
     /**
      * Utility for creating items easily.
-     *
+     * <p>
      * Sets the amount to 1 and the special data of 0.
      *
      * @param material the base material to use
@@ -117,7 +117,7 @@ public class ItemBuilder {
 
     /**
      * Sets the durability to a specified percentage.
-     *
+     * <p>
      * It is based off {@link Material#getMaxDurability()}
      *
      * @param durabilityPercent percentage to have the durabilty of
@@ -147,7 +147,7 @@ public class ItemBuilder {
 
     /**
      * Appends an array of lore lines to the lore
-     *
+     * <p>
      * The lines will be prefixed with {@link org.bukkit.ChatColor#GRAY}
      *
      * @param lines lines to add
@@ -185,11 +185,11 @@ public class ItemBuilder {
 
     /**
      * Adds an enchant with the specified enchant.
-     *
+     * <p>
      * If the level is less than 1, it will remove the enchant if it is present.
      *
      * @param enchantment the enchant to add
-     * @param level the level of the enchantment
+     * @param level       the level of the enchantment
      * @return builder instance
      */
     public ItemBuilder addEnchant(Enchantment enchantment, int level) {
@@ -201,8 +201,7 @@ public class ItemBuilder {
                 enchantments = Maps.newHashMap();
 
             enchantments.put(enchantment, level);
-        }
-        else
+        } else
             enchantments.remove(enchantment);
 
         return this;
@@ -247,9 +246,9 @@ public class ItemBuilder {
     /**
      * Add an additional potion effect to a {@link PotionMeta} item
      *
-     * @param type the effect type
+     * @param type      the effect type
      * @param amplifier the amplifier of the effect
-     * @param duration the duration of the
+     * @param duration  the duration of the
      * @return builder instance
      */
     public ItemBuilder addEffect(PotionEffectType type, int amplifier, int duration) {
@@ -285,7 +284,7 @@ public class ItemBuilder {
 
     /**
      * Sets the skull owner of a {@link SkullMeta} item.
-     *
+     * <p>
      * Also sets the durability to 3 which is that of a player head.
      *
      * @param owner player name
@@ -300,10 +299,9 @@ public class ItemBuilder {
     /**
      * Sets the skull texture of the item.
      *
-     * @see UtilItem#getSkull(String)
-     *
      * @param skullTexture skull texture hash to use
      * @return builder instance
+     * @see UtilItem#getSkull(String)
      */
     public ItemBuilder setSkullTexture(String skullTexture) {
         this.skullTexture = skullTexture;
@@ -314,7 +312,7 @@ public class ItemBuilder {
 
     /**
      * Sets an item to be glowing or not.
-     *
+     * <p>
      * If the type is {@link Material#GOLDEN_APPLE} and glow is <code>true</code>, it will make it a God apple.
      *
      * @param glow whether the item should glow or not
@@ -333,7 +331,7 @@ public class ItemBuilder {
 
     /**
      * Sets whether an item should be unbreaking or not.
-     *
+     * <p>
      * Uses spigot item tags.
      *
      * @param unbreaking if it should be unbreaking

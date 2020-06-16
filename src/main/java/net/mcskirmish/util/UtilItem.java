@@ -16,7 +16,7 @@ public class UtilItem {
 
     /**
      * Adds a glow to an item stack.
-     *
+     * <p>
      * Gives the item the enchantment of {@link Enchantment#DURABILITY} level 1
      * and adds the {@link ItemFlag#HIDE_ATTRIBUTES} so it just looks magical.
      *
@@ -39,8 +39,8 @@ public class UtilItem {
      * @return the created item
      */
     public static ItemStack getSkull(String textures) {
-        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
-        SkullMeta skullMeta = (SkullMeta)skull.getItemMeta();
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
 
         GameProfile profile = new GameProfile(UUID.randomUUID(), (String) null);
         byte[] encodedData = Base64.encodeBase64(String.format("{textures:{SKIN:{url:\"http://textures.minecraft.net/texture/%s\"}}}", textures).getBytes());

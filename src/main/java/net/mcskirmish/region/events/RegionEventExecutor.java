@@ -1,21 +1,19 @@
 package net.mcskirmish.region.events;
 
-import java.util.function.Consumer;
-
+import net.mcskirmish.region.Region;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 
-import net.mcskirmish.region.Region;
+import java.util.function.Consumer;
 
 /**
- * 
  * @author zorro
- *
- *         Executes Lambda Functions as Listeners, which were registered by
- *         {@link Region#registerListener(RegionListenerType, org.bukkit.plugin.Plugin, Consumer)}
+ * <p>
+ * Executes Lambda Functions as Listeners, which were registered by
+ * {@link Region#registerListener(RegionListenerType, org.bukkit.plugin.Plugin, Consumer)}
  */
 public class RegionEventExecutor<EventType extends Event> implements EventExecutor {
 

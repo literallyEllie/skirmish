@@ -1,11 +1,7 @@
 package net.mcskirmish.region;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
-import org.apache.commons.lang.NotImplementedException;
+import net.mcskirmish.region.events.RegionEventExecutor;
+import net.mcskirmish.region.events.RegionListenerType;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,16 +10,17 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 
-import net.mcskirmish.region.events.RegionListenerType;
-import net.mcskirmish.region.events.RegionEventExecutor;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public abstract class Region {
 
     private String regionName;
-    
+
     public String getRegionName() {
         return regionName;
     }
@@ -53,7 +50,7 @@ public abstract class Region {
     public abstract boolean contains(Location location);
 
     public boolean contains(Region otherRegion) {
-        return contains(otherRegion.getPoints().toArray(new Point[] {}));
+        return contains(otherRegion.getPoints().toArray(new Point[]{}));
     }
 
     public boolean isPlayerInside(Player player) {
@@ -65,12 +62,12 @@ public abstract class Region {
     /**
      * Registers a custom Region Listener with {@link RegionEventExecutor} as
      * EventExecutor
-     * 
+     *
      * @param rlt Type of Region Listener (e.g.
      *            {@linkplain RegionListenerType#ENTER_REGION})
      */
     public <EventType extends Event> void registerListener(RegionListenerType<EventType> rlt, Plugin plugin,
-            Consumer<EventType> listener) {
+                                                           Consumer<EventType> listener) {
         Bukkit
                 .getPluginManager()
                 .registerEvent(rlt.getEventClass(), null, EventPriority.NORMAL,
@@ -112,12 +109,12 @@ class RegionPoint extends Point implements ConfigurationSerializable {
                         "RegionPoint is not part of parent regions World");
     }
 
-    protected void setRegion(Region region) {
-        this.parentRegion = region;
-    }
-
     public Region getRegion() {
         return parentRegion;
+    }
+
+    protected void setRegion(Region region) {
+        this.parentRegion = region;
     }
 
     @Override

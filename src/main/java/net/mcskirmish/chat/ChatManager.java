@@ -50,7 +50,7 @@ public class ChatManager extends Module implements IInteractive {
         final Player player = event.getPlayer();
         Account account = plugin.getAccountManager().getAccount(player.getPlayer());
 
-        if (!chatPolicy.hasRankRequire()) {
+        if (!chatPolicy.canChat(account)) {
             message(account, C.IC + "You do not have permission to speak! You need " + C.IV + chatPolicy.getRequiredRank().getPrefix() + "+!");
             event.setCancelled(true);
             return;

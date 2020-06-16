@@ -1,4 +1,4 @@
-package net.mcskirmish.command.commands;
+package net.mcskirmish.command.impl;
 
 import com.google.common.collect.Lists;
 import net.mcskirmish.SkirmishPlugin;

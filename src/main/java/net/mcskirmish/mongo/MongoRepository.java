@@ -1,10 +1,12 @@
 package net.mcskirmish.mongo;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import net.mcskirmish.SkirmishPlugin;
 import org.bson.Document;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -45,12 +47,32 @@ public class MongoRepository {
     /**
      * Queries the collection for key and the variable to search with.
      *
-     * @param key    the key to find
-     * @param search the key
-     * @return a returned BSON {@link Document}
+     * @param index      the key to find
+     * @param indexQuery the key
+     * @return a returned BSON {@link Document}, may be null
      */
-    public Document query(String key, Object search) {
-        return getCollection().find(eq(key, search)).first();
+    public Document query(String index, Object indexQuery) {
+        return queryMany(index, indexQuery).first();
+    }
+
+    /**
+     * Queries the collection for as many documents as possible that match the query.
+     *
+     * @param index      index to get data by
+     * @param indexQuery assigned value of index
+     * @return an iterable of the resulted queries
+     */
+    public FindIterable<Document> queryMany(String index, Object indexQuery) {
+        return getCollection().find(eq(index, indexQuery));
+    }
+
+    /**
+     * Gets all the documents in the collection.
+     *
+     * @return all the documents in the collection.
+     */
+    public FindIterable<Document> queryAll() {
+        return getCollection().find();
     }
 
     /**
@@ -76,16 +98,39 @@ public class MongoRepository {
     }
 
     /**
-     * Batch inserts a map of data into the database
+     * Batch inserts data of an entry set into the database
+     *
+     * @param index      the index to get the data by
+     * @param indexQuery the assigned value of the index
+     * @param updates    the entries to update
+     */
+    public void batchUpdate(String index, Object indexQuery, Set<Map.Entry<String, Object>> updates) {
+        getCollection().updateMany(eq(index, indexQuery),
+                updates.stream()
+                        .map(stringObjectEntry -> set(stringObjectEntry.getKey(), stringObjectEntry.getValue()))
+                        .collect(Collectors.toList()));
+    }
+
+    /**
+     * Batch inserts data of a map into the database
      *
      * @param index      the index to get the data by
      * @param indexQuery the assigned value of the index
      * @param updates    the values to update
      */
     public void batchUpdate(String index, Object indexQuery, Map<String, Object> updates) {
-        getCollection().updateMany(eq(index, indexQuery), updates.entrySet().stream()
-                .map(stringObjectEntry -> set(stringObjectEntry.getKey(), stringObjectEntry.getValue()))
-                .collect(Collectors.toList()));
+        batchUpdate(index, indexQuery, updates.entrySet());
+    }
+
+    /**
+     * Batch inserts data of a document into the database
+     *
+     * @param index      the index to get the data by
+     * @param indexQuery the assigned value of the index
+     * @param document   the full document to update
+     */
+    public void updateFromDocument(String index, Object indexQuery, Document document) {
+        batchUpdate(index, indexQuery, document.entrySet());
     }
 
     /**
@@ -95,6 +140,16 @@ public class MongoRepository {
      */
     public void insert(Document document) {
         getCollection().insertOne(document);
+    }
+
+    /**
+     * Deletes as many documents as possible matching the query.
+     *
+     * @param index      the index of the query
+     * @param indexQuery the required value to be deleted
+     */
+    public void delete(String index, Object indexQuery) {
+        getCollection().deleteMany(eq(index, indexQuery));
     }
 
 }

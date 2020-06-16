@@ -23,7 +23,10 @@ public class Account {
             IPS = "ips",
             RANK = "rank",
             LAST_USE = "last_use",
-            LAST_SERVER = "last_server";
+            DESTINATION_SERVER = "destination_server",
+            LAST_SERVER = "last_server",
+            VANISHED = "vanished",
+            DISCORD_ID = "discord_id";
 
     private final AccountManager accountManager;
     private final Document document;
@@ -49,7 +52,7 @@ public class Account {
     /**
      * Creates a new account instance presuming the account is being created <b>now</b>
      * Typically called on {@link org.bukkit.event.player.AsyncPlayerPreLoginEvent}
-     *
+     * <p>
      * Default values set:
      * - Name
      * - Name in lower-case
@@ -59,9 +62,9 @@ public class Account {
      * - Their rank as {@link Rank#PLAYER}
      *
      * @param accountManager account manager instance
-     * @param uuid the uuid of the player
-     * @param name the connecting name of the player
-     * @param ip the the player is connecting with
+     * @param uuid           the uuid of the player
+     * @param name           the connecting name of the player
+     * @param ip             the the player is connecting with
      * @return default account instance
      */
     public static Account newAccount(AccountManager accountManager, UUID uuid, String name, String ip) {
@@ -171,6 +174,28 @@ public class Account {
         player.setDisplayName(rank.getPrefix() + (rank.isDefault() ? "" : " ") + getName());
     }
 
+    public String getDestinationServer() {
+        return document.getString(DESTINATION_SERVER);
+    }
+
+    public String getLastServer() {
+        return document.getString(LAST_SERVER);
+    }
+
+    public boolean isVanished() {
+        return document.getBoolean(VANISHED);
+    }
+
+    public long getDiscordId() {
+        return document.getLong(DISCORD_ID);
+    }
+
+    public boolean hasDiscordLinked() {
+        return document.containsKey(DISCORD_ID);
+    }
+
+    /*  */
+
     public void sendMessage(String message) {
         if (player == null)
             return;
@@ -203,10 +228,16 @@ public class Account {
     }
 
     public boolean isCooldownActive(String name, boolean silent) {
-        boolean active = cooldowns.containsKey(name) && System.currentTimeMillis() - cooldowns.get(name) > 0;
-        if (active && !silent) {
-            sendMessage(C.V + name + C.C + " is on cooldown for " + C.V + (System.currentTimeMillis() - cooldowns.get(name)) / 1000 + " seconds.");
-        }
+        if (!cooldowns.containsKey(name))
+            return false;
+
+        final long remaining = cooldowns.get(name) - System.currentTimeMillis();
+        boolean active = remaining > 0;
+
+        if (!silent && active) {
+            sendMessage(C.V + name + C.C + " is on cooldown for " + C.V + (remaining / 1000) + " seconds.");
+        } else if (!active)
+            cooldowns.remove(name);
 
         return active;
     }

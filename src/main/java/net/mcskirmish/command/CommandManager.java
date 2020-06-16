@@ -3,9 +3,12 @@ package net.mcskirmish.command;
 import com.google.common.collect.Lists;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
-import net.mcskirmish.command.commands.CommandHelp;
-import net.mcskirmish.command.commands.CommandList;
-import net.mcskirmish.command.commands.CommandVersion;
+import net.mcskirmish.command.impl.CommandHelp;
+import net.mcskirmish.command.impl.CommandList;
+import net.mcskirmish.command.impl.CommandVersion;
+import net.mcskirmish.command.impl.MicroCommand;
+import net.mcskirmish.util.C;
+import net.mcskirmish.util.Domain;
 import org.bukkit.command.SimpleCommandMap;
 
 import java.lang.reflect.Field;
@@ -57,11 +60,16 @@ public class CommandManager extends Module {
         unregisterVanilla("ver");
         unregisterVanilla("about");
         unregisterVanilla("me");
+        unregisterVanilla("say");
         unregisterVanilla("help");
         unregisterVanilla("?");
 
         // register core commands
         registerCommands(new CommandVersion(plugin), new CommandHelp(plugin), new CommandList(plugin));
+
+        // Micro commands
+        registerCommands(new MicroCommand(plugin, "discord", Lists.newArrayList("dc"),
+                "You can join our Discord at " + C.V + Domain.DISCORD));
     }
 
     @Override

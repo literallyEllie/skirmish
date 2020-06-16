@@ -1,13 +1,13 @@
 package net.mcskirmish.region;
 
+import org.bukkit.Location;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.bukkit.Location;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
 
 @SerializableAs("SphericalRegion")
 public class SphericalRegion extends Region implements ConfigurationSerializable {
@@ -58,7 +58,9 @@ public class SphericalRegion extends Region implements ConfigurationSerializable
         return worldName;
     }
 
-    /** Generates Points needed for {@link Region#contains(Region)} */
+    /**
+     * Generates Points needed for {@link Region#contains(Region)}
+     */
     @Override
     public List<RegionPoint> getPoints() {
         if (points == null) {

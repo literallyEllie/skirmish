@@ -1,5 +1,12 @@
 package net.mcskirmish.region;
 
+import com.google.common.collect.Maps;
+import net.mcskirmish.Module;
+import net.mcskirmish.SkirmishPlugin;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -9,18 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-
-import com.google.common.collect.Maps;
-
-import net.mcskirmish.Module;
-import net.mcskirmish.SkirmishPlugin;
-
 /**
- * 
- * 
  *
  */
 public class RegionManager extends Module {

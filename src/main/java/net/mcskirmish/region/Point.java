@@ -1,18 +1,17 @@
 package net.mcskirmish.region;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Point implements ConfigurationSerializable {
 
-    private String world;
     private final double x, y, z;
+    private String world;
 
     public Point(Map<String, Object> serializedPoint) {
         world = (String) serializedPoint.get("world");
@@ -62,11 +61,11 @@ public class Point implements ConfigurationSerializable {
 
     /**
      * Calculates the distance of both Points to each other
-     * 
-     * @exception IllegalArgumentException If otherPoint is outside of this Point's
-     *                                     world.
+     *
      * @param otherPoint
      * @return
+     * @throws IllegalArgumentException If otherPoint is outside of this Point's
+     *                                  world.
      */
     public double distance(Point otherPoint) {
         if (!otherPoint.getWorldName().equals(getWorldName())) {

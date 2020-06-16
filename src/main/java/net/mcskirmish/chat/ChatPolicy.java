@@ -74,6 +74,10 @@ public class ChatPolicy {
         return requiredRank.ordinal() > Rank.PLAYER.ordinal();
     }
 
+    public boolean canChat(Account account) {
+        return account.getRank().isHigherOrEqualTo(requiredRank);
+    }
+
     public ChatMessage handleChat(ChatMessage message) {
         Account account = message.getAccount();
         Rank rank = account.getRank();
