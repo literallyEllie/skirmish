@@ -3,7 +3,9 @@ package net.mcskirmish.network;
 import com.google.common.collect.Maps;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
+import net.mcskirmish.account.Account;
 import net.mcskirmish.network.data.ServerDataManager;
+import net.mcskirmish.network.data.server.ServerData;
 import net.mcskirmish.util.UtilServer;
 
 import java.util.Comparator;
@@ -103,6 +105,30 @@ public class NetworkManager extends Module {
         thisServer.getDocument().put(ServerData.TPS, UtilServer.getTps());
         thisServer.setRequiredRank(plugin.getServerManager().getMinRank());
         return thisServer;
+    }
+
+    /**
+     * Registers the account has being logged onto the server.
+     * <p>
+     * Should only be called one time when they join the local server
+     *
+     * @param account account joining
+     */
+    public void registerPlayerOnServer(Account account) {
+        if (serverDataManager != null)
+            serverDataManager.registerPlayerOnServer(account, thisServer.getServerGroup());
+    }
+
+    /**
+     * Registers an account having disconnected from the local server.
+     * <p>
+     * Should only be called when they are definitely going to leave.
+     *
+     * @param account account leaving
+     */
+    public void unregisterPlayerOnServer(Account account) {
+        if (serverDataManager != null)
+            serverDataManager.unregisterPlayerOnServer(account);
     }
 
     /**

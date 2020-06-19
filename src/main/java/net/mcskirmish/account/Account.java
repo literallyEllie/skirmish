@@ -30,9 +30,8 @@ public class Account {
 
     private final AccountManager accountManager;
     private final Document document;
-
+    private final HashMap<String, Long> cooldowns;
     private Player player;
-    private HashMap<String, Long> cooldowns;
 
     /**
      * Represents an account and personal data of a user.

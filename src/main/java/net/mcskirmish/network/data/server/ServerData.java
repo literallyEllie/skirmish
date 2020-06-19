@@ -1,6 +1,7 @@
-package net.mcskirmish.network;
+package net.mcskirmish.network.data.server;
 
 import net.mcskirmish.account.Rank;
+import net.mcskirmish.network.ServerGroup;
 import org.bson.Document;
 
 public class ServerData {

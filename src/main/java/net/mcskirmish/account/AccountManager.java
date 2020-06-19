@@ -154,6 +154,8 @@ public class AccountManager extends Module {
         }
 
         account.setPlayer(player);
+
+        plugin.getNetworkManager().registerPlayerOnServer(account);
     }
 
     @EventHandler
@@ -166,6 +168,8 @@ public class AccountManager extends Module {
         } else {
             SkirmishEvent.callEvent(new PlayerSwitchServerEvent(account, account.getDestinationServer()));
         }
+
+        plugin.getNetworkManager().unregisterPlayerOnServer(account);
 
         event.setQuitMessage(null);
     }

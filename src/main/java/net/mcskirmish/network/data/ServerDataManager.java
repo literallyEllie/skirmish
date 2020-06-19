@@ -4,12 +4,15 @@ import com.google.common.collect.Maps;
 import com.mongodb.client.FindIterable;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
+import net.mcskirmish.account.Account;
 import net.mcskirmish.event.update.UpdateEvent;
 import net.mcskirmish.event.update.UpdateType;
 import net.mcskirmish.mongo.table.ServerDataRepository;
+import net.mcskirmish.mongo.table.ServerPlayersRepository;
 import net.mcskirmish.network.NetworkManager;
-import net.mcskirmish.network.ServerData;
 import net.mcskirmish.network.ServerGroup;
+import net.mcskirmish.network.data.player.PlayerServerData;
+import net.mcskirmish.network.data.server.ServerData;
 import org.bson.Document;
 import org.bukkit.event.EventHandler;
 
@@ -19,7 +22,8 @@ import java.util.function.Consumer;
 
 public class ServerDataManager extends Module {
 
-    private ServerDataRepository repository;
+    private ServerDataRepository serverRepository;
+    private ServerPlayersRepository playersRepository;
 
     /**
      * Manager for the backend side of server data.
@@ -39,7 +43,8 @@ public class ServerDataManager extends Module {
 
     @Override
     protected void start() {
-        repository = new ServerDataRepository(plugin);
+        serverRepository = new ServerDataRepository(plugin);
+        playersRepository = new ServerPlayersRepository(plugin);
 
         // update at random period
         runAsync(0, ThreadLocalRandom.current().nextInt(15, 30) * 20, () -> getDataByName(null));
@@ -48,7 +53,7 @@ public class ServerDataManager extends Module {
     @Override
     protected void stop() {
         // remove from active server pool
-        repository.delete(ServerData.ID, plugin.getServerManager().getServerId());
+        serverRepository.delete(ServerData.ID, plugin.getServerManager().getServerId());
     }
 
     @EventHandler
@@ -65,7 +70,7 @@ public class ServerDataManager extends Module {
      */
     public void getDataByGroup(Consumer<Map<ServerGroup, ServerData>> result) {
         runAsync(() -> {
-            final FindIterable<Document> results = repository.queryAll();
+            final FindIterable<Document> results = serverRepository.queryAll();
 
             Map<ServerGroup, ServerData> serverData = Maps.newHashMap();
             results.forEach((Consumer<? super Document>) document -> {
@@ -87,7 +92,7 @@ public class ServerDataManager extends Module {
      */
     public void getDataByName(Consumer<Map<String, ServerData>> result) {
         runAsync(() -> {
-            final FindIterable<Document> results = repository.queryAll();
+            final FindIterable<Document> results = serverRepository.queryAll();
 
             Map<String, ServerData> serverData = Maps.newHashMap();
             results.forEach((Consumer<? super Document>) document -> {
@@ -102,14 +107,37 @@ public class ServerDataManager extends Module {
         });
     }
 
+    /**
+     * Registers the account has being logged onto the server.
+     * <p>
+     * Should only be called one time when they join the local server
+     *
+     * @param account account joining
+     * @param group   server category group
+     */
+    public void registerPlayerOnServer(Account account, ServerGroup group) {
+        runAsync(() -> playersRepository.insert(new PlayerServerData(account, group).getDocument()));
+    }
+
+    /**
+     * Registers an account having disconnected from the local server.
+     * <p>
+     * Should only be called when they are definitely going to leave.
+     *
+     * @param account account leaving
+     */
+    public void unregisterPlayerOnServer(Account account) {
+        runAsync(() -> playersRepository.delete(PlayerServerData.ID, account.getUuid()));
+    }
+
     private void publishState() {
         final ServerData serverData = plugin.getNetworkManager().updateSelfServerData();
         Document document = serverData.getDocument();
 
         runAsync(() -> {
-            final Document existing = repository.query(ServerData.ID, serverData.getId());
+            final Document existing = serverRepository.query(ServerData.ID, serverData.getId());
             if (existing == null) {
-                repository.insert(document);
+                serverRepository.insert(document);
             } else {
                 Map<String, Object> updateValues = Maps.newHashMap();
 
@@ -118,7 +146,7 @@ public class ServerDataManager extends Module {
                 updateValues.put(ServerData.TPS, serverData.getTps());
                 updateValues.put(ServerData.REQUIRED_RANK, serverData.getRequiredRank().name());
 
-                repository.batchUpdate(ServerData.ID, serverData.getId(), updateValues);
+                serverRepository.batchUpdate(ServerData.ID, serverData.getId(), updateValues);
             }
         });
 
