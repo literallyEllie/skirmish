@@ -78,7 +78,7 @@ public class ServerData {
         return requiredRank;
     }
 
-    public void setRequiredRank(StaffRank rank) {
+    public void setRequiredRank(IRank rank) {
         document.append(REQUIRED_RANK, (requiredRank = rank).id());
     }
 
