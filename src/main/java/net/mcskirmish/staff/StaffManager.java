@@ -3,6 +3,7 @@ package net.mcskirmish.staff;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
+import net.mcskirmish.rank.CommandStaffRank;
 import net.mcskirmish.staff.command.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -19,7 +20,7 @@ public class StaffManager extends Module {
     @Override
     protected void start() {
         plugin.getCommandManager().registerCommands(
-                new CommandRank(plugin), new CommandHeal(plugin), new CommandFly(plugin), new CommandFeed(plugin),
+                new CommandStaffRank(plugin), new CommandHeal(plugin), new CommandFly(plugin), new CommandFeed(plugin),
                 new CommandClearInventory(plugin), new CommandGameMode(plugin), new CommandBroadcast(plugin)
         );
 
@@ -34,7 +35,7 @@ public class StaffManager extends Module {
     public void sendStaffChat(StaffChannel channel, Object sender, String message) {
         String senderName;
         if (sender instanceof Account) {
-            senderName = ((Account) sender).getRank().getPrefix() + " " + ((Account) sender).getName();
+            senderName = ((Account) sender).getStaffRank().getPrefix() + " " + ((Account) sender).getName();
         } else if (sender instanceof ConsoleCommandSender) {
             senderName = ChatColor.RED + "[Console]";
         } else if (sender instanceof Player) {
@@ -49,7 +50,7 @@ public class StaffManager extends Module {
     }
 
     public void displayStaffChat(StaffChannel channel, String message) {
-        plugin.getAccountManager().getAccounts().stream().filter(account -> account.getRank().isHigherOrEqualTo(channel.getRequired()))
+        plugin.getAccountManager().getAccounts().stream().filter(account -> account.getStaffRank().isHigherOrEqualTo(channel.getRequired()))
                 .forEach(account -> account.sendMessage(message));
     }
 

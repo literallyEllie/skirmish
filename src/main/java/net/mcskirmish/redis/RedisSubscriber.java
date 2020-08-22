@@ -53,7 +53,7 @@ public abstract class RedisSubscriber<T, P extends Module> extends JedisPubSub {
     /**
      * Subscribes to the channel using a connection from the {@link RedisRepository#get(Consumer)}
      *
-     * <b>This method is called already from the constructor</b>D
+     * <b>This method is called already from the constructor</b>
      * <p>
      * If the server is not {@link SkirmishPlugin#isNetworkingServer()} this will be ignored.
      */

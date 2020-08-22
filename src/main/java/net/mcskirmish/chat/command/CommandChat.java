@@ -2,9 +2,9 @@ package net.mcskirmish.chat.command;
 
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
 import net.mcskirmish.chat.ChatPolicy;
 import net.mcskirmish.command.Command;
+import net.mcskirmish.rank.impl.StaffRank;
 import org.bukkit.command.CommandSender;
 
 import java.util.Optional;
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class CommandChat extends Command {
 
     public CommandChat(SkirmishPlugin plugin) {
-        super(plugin, "Chat", "Chat Control", Rank.MODERATOR, "<mute | clear | cooldown>", "[value]");
+        super(plugin, "Chat", "Chat Control", StaffRank.MODERATOR, "<mute | clear | cooldown>", "[value]");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class CommandChat extends Command {
                 return;
             }
 
-            final Optional<Rank> rank = Rank.fromString(args[1]);
+            final Optional<StaffRank> rank = StaffRank.fromString(args[1]);
             if (!rank.isPresent()) {
                 message(sender, "Please specify a valid rank.");
                 return;

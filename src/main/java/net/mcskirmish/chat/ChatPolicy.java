@@ -1,7 +1,7 @@
 package net.mcskirmish.chat;
 
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
+import net.mcskirmish.rank.impl.StaffRank;
 import net.mcskirmish.util.C;
 import net.mcskirmish.util.UtilServer;
 import org.bukkit.Bukkit;
@@ -11,7 +11,7 @@ public class ChatPolicy {
 
     private String format;
     private int chatDelay;
-    private Rank requiredRank;
+    private net.mcskirmish.rank.IRank requiredRank;
 
     /**
      * The base implementation of a {@link ChatPolicy}
@@ -21,7 +21,7 @@ public class ChatPolicy {
     public ChatPolicy() {
         this.format = "{display}" + ChatColor.DARK_GRAY + "> {message}";
         this.chatDelay = 3;
-        this.requiredRank = Rank.PLAYER;
+        this.requiredRank = StaffRank.NONE;
     }
 
     public String getFormat() {
@@ -36,7 +36,7 @@ public class ChatPolicy {
         return this.chatDelay;
     }
 
-    public Rank getRequiredRank() {
+    public net.mcskirmish.rank.IRank getRequiredRank() {
         return this.requiredRank;
     }
 
@@ -52,9 +52,9 @@ public class ChatPolicy {
         return chatDelay > 0;
     }
 
-    public void setRequiredRank(String executorName, boolean silent, Rank rank) {
+    public void setRequiredRank(String executorName, boolean silent, net.mcskirmish.rank.IRank rank) {
         if (!silent) {
-            UtilServer.broadcast(C.IV + executorName + C.IC + " has set the minimum required rank to chat to " + (rank.isDefault() ? rank.getRankColor() + rank.getName() : rank.getPrefix() + "+!"));
+            UtilServer.broadcast(C.IV + executorName + C.IC + " has set the minimum required rank to chat to " + rank.getPrefix() + "+!");
         }
 
         this.requiredRank = rank;
@@ -71,7 +71,7 @@ public class ChatPolicy {
     }
 
     public boolean hasRankRequire() {
-        return requiredRank.ordinal() > Rank.PLAYER.ordinal();
+        return requiredRank.weight() > StaffRank.NONE.ordinal();
     }
 
     public boolean canChat(Account account) {
@@ -80,8 +80,8 @@ public class ChatPolicy {
 
     public ChatMessage handleChat(ChatMessage message) {
         Account account = message.getAccount();
-        Rank rank = account.getRank();
-        message.setFormat(format.replace("{message}", (rank.isDefault() ? "" : rank.getPrefix() + " ") + account.getName() + " %2$s"));
+        StaffRank rank = account.getStaffRank();
+        message.setFormat(format.replace("{message}", rank.getPrefix() + " " + account.getName() + " %2$s"));
         return message;
     }
 

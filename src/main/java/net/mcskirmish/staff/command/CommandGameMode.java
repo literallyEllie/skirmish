@@ -3,8 +3,8 @@ package net.mcskirmish.staff.command;
 import com.google.common.collect.Lists;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
 import net.mcskirmish.command.Command;
+import net.mcskirmish.rank.impl.StaffRank;
 import net.mcskirmish.util.C;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.GameMode;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class CommandGameMode extends Command {
 
     public CommandGameMode(SkirmishPlugin plugin) {
-        super(plugin, "Gamemode", "Sets a players gamemode", Rank.ADMIN, Lists.newArrayList("gm"),
+        super(plugin, "Gamemode", "Sets a players gamemode", StaffRank.ADMIN, Lists.newArrayList("gm"),
                 "<creative | survival | adventure | spectator>", "[player]");
     }
 

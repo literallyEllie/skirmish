@@ -5,12 +5,9 @@ import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import redis.clients.jedis.JedisPubSub;
 
-import java.io.File;
 import java.util.Set;
 
 public class RedisManager extends Module {
-
-    private static final String PATH_REDIS = "config" + File.separator + "redis.json";
 
     private Set<RedisSubscriber<?, ?>> subscribers;
     private RedisRepository repository;
@@ -25,7 +22,7 @@ public class RedisManager extends Module {
         if (!plugin.isNetworkingServer())
             return;
 
-        repository = new RedisRepository(new File(PATH_REDIS));
+        repository = new RedisRepository(plugin.getConfig());
     }
 
     @Override

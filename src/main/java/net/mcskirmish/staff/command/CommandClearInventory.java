@@ -3,8 +3,8 @@ package net.mcskirmish.staff.command;
 import com.google.common.collect.Lists;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
 import net.mcskirmish.command.Command;
+import net.mcskirmish.rank.impl.StaffRank;
 import net.mcskirmish.util.C;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 public class CommandClearInventory extends Command {
 
     public CommandClearInventory(SkirmishPlugin plugin) {
-        super(plugin, "clearinventory", "Clears a players inventory.", Rank.ADMIN, Lists.newArrayList("ci"), "[player]");
+        super(plugin, "clearinventory", "Clears a players inventory.", StaffRank.ADMIN, Lists.newArrayList("ci"), "[player]");
     }
 
     @Override

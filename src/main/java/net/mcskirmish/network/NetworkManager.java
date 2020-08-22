@@ -112,7 +112,7 @@ public class NetworkManager extends Module {
      * <p>
      * Should only be called one time when they join the local server
      *
-     * @param account account joining
+     * @param account account joiningAll
      */
     public void registerPlayerOnServer(Account account) {
         if (serverDataManager != null)

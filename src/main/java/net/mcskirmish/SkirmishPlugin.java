@@ -9,6 +9,8 @@ import net.mcskirmish.mongo.MongoManager;
 import net.mcskirmish.network.NetworkManager;
 import net.mcskirmish.redis.RedisManager;
 import net.mcskirmish.region.RegionManager;
+import net.mcskirmish.server.IDomainProvider;
+import net.mcskirmish.server.ITabProvider;
 import net.mcskirmish.server.ServerManager;
 import net.mcskirmish.staff.StaffManager;
 import org.bukkit.event.Listener;
@@ -36,9 +38,14 @@ public abstract class SkirmishPlugin extends JavaPlugin {
     private boolean isLocalServer, isDevServer, isNetworkingServer, isLobbyServer;
     private long serverStart, startupTime;
 
+    // generics
+    private ITabProvider tabProvider;
+    private IDomainProvider domainProvider;
+
     @Override
     public final void onEnable() {
         serverStart = System.currentTimeMillis();
+        saveDefaultConfig();
 
         // load server type
         isLocalServer = new File("LOCAL").exists();
@@ -171,6 +178,22 @@ public abstract class SkirmishPlugin extends JavaPlugin {
 
     public long getStartupTime() {
         return startupTime;
+    }
+
+    public ITabProvider getTabProvider() {
+        return tabProvider;
+    }
+
+    public void setTabProvider(ITabProvider tabProvider) {
+        this.tabProvider = tabProvider;
+    }
+
+    public IDomainProvider getDomainProvider() {
+        return domainProvider;
+    }
+
+    public void setDomainProvider(IDomainProvider domainProvider) {
+        this.domainProvider = domainProvider;
     }
 
     public void log(Level level, String data, Throwable throwable) {

@@ -1,13 +1,13 @@
-package net.mcskirmish.account;
+package net.mcskirmish.rank.impl;
 
 import org.bukkit.ChatColor;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-public enum Rank {
+public enum StaffRank implements net.mcskirmish.rank.IRank {
 
-    PLAYER("Player", ChatColor.WHITE),
+    NONE("Player", ChatColor.WHITE),
     YOUTUBE("YouTube", ChatColor.WHITE),
     TWITCH("Twitch", ChatColor.DARK_PURPLE),
     MODERATOR("Mod", ChatColor.YELLOW),
@@ -19,60 +19,67 @@ public enum Rank {
     private final ChatColor rankColor, chatColor;
 
     /**
-     * Represents any rank which a player can have.
+     * Represents a preset rank which is present throughout every server
      * It is done in the order of hierarchy from lowest to highest.
      * <p>
-     * To compare ranks use {@link Rank#isHigherOrEqualTo(Rank)}
+     * To compare ranks use {@link net.mcskirmish.rank.IRank#isHigherOrEqualTo(net.mcskirmish.rank.IRank)}
+     * <p>
+     * This is not the lowest level of accounts, and this is dependant on the implementation.
      *
      * @param name      name of the rank
      * @param rankColor rank prefix color
      * @param userColor rank username color
      */
-    Rank(String name, ChatColor rankColor, ChatColor userColor) {
+    StaffRank(String name, ChatColor rankColor, ChatColor userColor) {
         this.name = name;
         this.rankColor = rankColor;
         this.chatColor = userColor;
     }
 
-    Rank(String name, ChatColor rankColor) {
+    StaffRank(String name, ChatColor rankColor) {
         this(name, rankColor, ChatColor.WHITE);
     }
 
-    public static Optional<Rank> fromString(String string) {
+    public static Optional<StaffRank> fromString(String string) {
         String upper = string.toUpperCase();
         return Arrays.stream(values())
                 .filter(rank -> rank.name().equals(upper) || rank.getName().toUpperCase().equals(upper))
                 .findFirst();
     }
 
+    @Override
+    public String id() {
+        return name();
+    }
+
+    @Override
+    public int weight() {
+        return ordinal();
+    }
+
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public ChatColor getRankColor() {
         return this.rankColor;
     }
 
+    @Override
     public ChatColor getChatColor() {
         return chatColor;
     }
 
-    public boolean isDefault() {
-        return this == PLAYER;
-    }
-
+    @Override
     public boolean isStaff() {
         return isHigherOrEqualTo(ADMIN);
     }
 
+    @Override
     public String getPrefix() {
-        return getRankColor() + (isDefault()
-                ? ""
-                : "[" + getName() + "]") + getChatColor();
-    }
-
-    public boolean isHigherOrEqualTo(Rank rank) {
-        return this.ordinal() >= rank.ordinal();
+        return getRankColor() + "[" + getName() + "]" + getChatColor();
     }
 
 }

@@ -2,8 +2,8 @@ package net.mcskirmish.staff.command;
 
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
 import net.mcskirmish.command.Command;
+import net.mcskirmish.rank.impl.StaffRank;
 import net.mcskirmish.util.C;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class CommandHeal extends Command {
 
     public CommandHeal(SkirmishPlugin plugin) {
-        super(plugin, "heal", "Heals a player.", Rank.ADMIN, "[player]");
+        super(plugin, "heal", "Heals a player.", StaffRank.ADMIN, "[player]");
     }
 
     @Override

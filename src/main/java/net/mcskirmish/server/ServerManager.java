@@ -1,18 +1,18 @@
 package net.mcskirmish.server;
 
+import com.google.common.base.Preconditions;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
-import net.mcskirmish.account.Rank;
-
-import java.io.*;
+import net.mcskirmish.rank.IRank;
+import net.mcskirmish.rank.impl.StaffRank;
 
 public class ServerManager extends Module {
 
-    private static final String PATH_MIN_RANK = "config" + File.separator + "min-rank.txt";
-    private static final String PATH_SERVER_ID = "config" + File.separator + "server-id.txt";
+    private static final String PATH_SERVER_ID = "server-id";
+    private static final String PATH_MIN_RANK = "min-rank";
 
     private String serverId;
-    private Rank minRank;
+    private IRank minRank;
 
     public ServerManager(SkirmishPlugin plugin) {
         super(plugin);
@@ -20,23 +20,10 @@ public class ServerManager extends Module {
 
     @Override
     protected void start() {
+        serverId = plugin.getConfig().getString(PATH_SERVER_ID, null);
+        minRank = StaffRank.valueOf(plugin.getConfig().getString(PATH_MIN_RANK, StaffRank.NONE.name()));
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(PATH_SERVER_ID)))) {
-            serverId = reader.readLine();
-        } catch (IOException e) {
-            plugin.error("failed to read server id file", e);
-        }
-
-        // min rank
-        final File minRankFile = new File(PATH_MIN_RANK);
-        if (minRankFile.exists()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(minRankFile))) {
-                minRank = Rank.valueOf(reader.readLine());
-            } catch (IOException e) {
-                plugin.error("failed to read from min rank file", e);
-            }
-        }
-
+        Preconditions.checkNotNull(serverId, "server id must be defined!");
     }
 
     /**
@@ -55,9 +42,9 @@ public class ServerManager extends Module {
      *
      * @return the minimum rank to join
      */
-    public Rank getMinRank() {
+    public IRank getMinRank() {
         if (minRank == null)
-            minRank = Rank.PLAYER;
+            minRank = StaffRank.NONE;
         return minRank;
     }
 
@@ -68,16 +55,11 @@ public class ServerManager extends Module {
      *
      * @param minRank min rank required to join the server
      */
-    public void setMinRank(Rank minRank) {
+    public void setMinRank(IRank minRank) {
         this.minRank = minRank;
 
-        try (FileWriter writer = new FileWriter(new File(PATH_MIN_RANK))) {
-            writer.write(minRank.name());
-            writer.flush();
-        } catch (IOException e) {
-            plugin.error("failed to write min rank", e);
-        }
+        plugin.getConfig().set(PATH_MIN_RANK, minRank.id());
+        plugin.saveConfig();
     }
-
 
 }

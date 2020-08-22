@@ -9,6 +9,7 @@ import net.mcskirmish.mongo.table.AccountsRepository;
 import net.mcskirmish.network.NetworkManager;
 import net.mcskirmish.network.event.PlayerQuitNetworkEvent;
 import net.mcskirmish.network.event.PlayerSwitchServerEvent;
+import net.mcskirmish.rank.impl.StaffRank;
 import net.mcskirmish.server.ServerManager;
 import net.mcskirmish.util.C;
 import net.mcskirmish.util.Domain;
@@ -119,8 +120,8 @@ public class AccountManager extends Module {
             }
 
             // check can join
-            final Rank minRank = plugin.getServerManager().getMinRank();
-            if (account.getRank().ordinal() < minRank.ordinal()) {
+            final StaffRank minRank = plugin.getServerManager().getMinRank();
+            if (account.getStaffRank().ordinal() < minRank.ordinal()) {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                         ChatColor.RED + "Only " + minRank.getPrefix() + ChatColor.RED + "+ can join this server :(");
                 return;
@@ -149,7 +150,7 @@ public class AccountManager extends Module {
 
         if (account == null) {
             player.kickPlayer(C.IC + "Sorry! There was an error loading your data..." +
-                    "\n\nJoin our Discord for support " + C.IV + Domain.DISCORD);
+                    "\n\nJoin our Discord for support " + C.IV + plugin.getDomainProvider().get(Domain.DISCORD));
             return;
         }
 

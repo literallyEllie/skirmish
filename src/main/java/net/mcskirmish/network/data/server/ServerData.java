@@ -1,7 +1,8 @@
 package net.mcskirmish.network.data.server;
 
-import net.mcskirmish.account.Rank;
 import net.mcskirmish.network.ServerGroup;
+import net.mcskirmish.rank.IRank;
+import net.mcskirmish.rank.impl.StaffRank;
 import org.bson.Document;
 
 public class ServerData {
@@ -16,7 +17,7 @@ public class ServerData {
 
     private final Document document;
     private final ServerGroup serverGroup;
-    private Rank requiredRank;
+    private IRank requiredRank;
 
     /**
      * Represents an online server on the network.
@@ -29,20 +30,20 @@ public class ServerData {
      * @param tps        most recent tps
      * @param rank       required rank to join the server
      */
-    public ServerData(String id, ServerGroup group, String publicIp, int players, int maxPlayers, double tps, Rank rank) {
+    public ServerData(String id, ServerGroup group, String publicIp, int players, int maxPlayers, double tps, IRank rank) {
         this.document = new Document(ID, id)
                 .append(GROUP, (serverGroup = group).name())
                 .append(PUBLIC_IP, publicIp)
                 .append(PLAYERS, players)
                 .append(MAX_PLAYERS, maxPlayers)
                 .append(TPS, tps)
-                .append(REQUIRED_RANK, (requiredRank = rank).name());
+                .append(REQUIRED_RANK, (requiredRank = rank).id());
     }
 
     public ServerData(Document document) {
         this.document = document;
         this.serverGroup = ServerGroup.valueOf(document.getString(GROUP));
-        this.requiredRank = Rank.valueOf(document.getString(REQUIRED_RANK));
+        this.requiredRank = StaffRank.valueOf(document.getString(REQUIRED_RANK));
     }
 
     public String getId() {
@@ -73,12 +74,12 @@ public class ServerData {
         return document.getDouble(TPS);
     }
 
-    public Rank getRequiredRank() {
+    public IRank getRequiredRank() {
         return requiredRank;
     }
 
-    public void setRequiredRank(Rank rank) {
-        document.append(REQUIRED_RANK, (requiredRank = rank).name());
+    public void setRequiredRank(StaffRank rank) {
+        document.append(REQUIRED_RANK, (requiredRank = rank).id());
     }
 
     public Document getDocument() {

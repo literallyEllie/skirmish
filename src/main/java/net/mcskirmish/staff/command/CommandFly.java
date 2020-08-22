@@ -2,8 +2,8 @@ package net.mcskirmish.staff.command;
 
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
 import net.mcskirmish.command.Command;
+import net.mcskirmish.rank.impl.StaffRank;
 import net.mcskirmish.util.C;
 import net.mcskirmish.util.M;
 import org.bukkit.command.CommandSender;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 public class CommandFly extends Command {
 
     public CommandFly(SkirmishPlugin plugin) {
-        super(plugin, "fly", "Toggle flying mode for a player", Rank.MODERATOR, "[player]");
+        super(plugin, "fly", "Toggle flying mode for a player", StaffRank.MODERATOR, "[player]");
     }
 
     @Override
@@ -26,8 +26,8 @@ public class CommandFly extends Command {
                 return;
             }
         } else {
-            if (account != null && !account.getRank().isHigherOrEqualTo(Rank.ADMIN)) {
-                sender.sendMessage(M.noPerm(Rank.ADMIN));
+            if (account != null && !account.getStaffRank().isHigherOrEqualTo(StaffRank.ADMIN)) {
+                sender.sendMessage(M.noPerm(StaffRank.ADMIN));
                 return;
             }
 

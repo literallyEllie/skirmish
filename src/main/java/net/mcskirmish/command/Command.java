@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import net.mcskirmish.IInteractive;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
+import net.mcskirmish.rank.impl.StaffRank;
 import net.mcskirmish.util.*;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +18,7 @@ import java.util.List;
 public abstract class Command extends org.bukkit.command.Command implements CommandExecutor, TabCompleter, IInteractive {
 
     protected final SkirmishPlugin plugin;
-    private final Rank requiredRank;
+    private final StaffRank requiredRank;
     private final int requiredArgs;
     private final String prefix, usageSuffix;
 
@@ -40,7 +40,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
      *                    And <b>[..]</b> represents optional fields
      *                    All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
      */
-    public Command(SkirmishPlugin plugin, String name, String description, Rank rank, List<String> aliases, String... usage) {
+    public Command(SkirmishPlugin plugin, String name, String description, StaffRank rank, List<String> aliases, String... usage) {
         super(name);
         super.setDescription(description.endsWith(".") ? description : description + ".");
         super.setAliases(aliases);
@@ -53,7 +53,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
     }
 
     /**
-     * Alternative constructor for commands which can be run by anyone. ({@link Rank#PLAYER})
+     * Alternative constructor for commands which can be run by anyone. ({@link StaffRank#NONE})
      *
      * @param plugin      plugin instance
      * @param name        main label to execute
@@ -66,7 +66,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
      *                    All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
      */
     public Command(SkirmishPlugin plugin, String name, String description, List<String> aliases, String... usage) {
-        this(plugin, name, description, Rank.PLAYER, aliases, usage);
+        this(plugin, name, description, StaffRank.NONE, aliases, usage);
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
      *                    And <b>[..]</b> represents optional fields
      *                    All the mandatory fields are counted and this is stored as {@link Command#requiredArgs}
      */
-    public Command(SkirmishPlugin plugin, String name, String description, Rank rank, String... usage) {
+    public Command(SkirmishPlugin plugin, String name, String description, StaffRank rank, String... usage) {
         this(plugin, name, description, rank, Lists.newArrayList(), usage);
     }
 
@@ -119,11 +119,12 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
             account = getAccount(sender);
             if (account == null) {
                 ((Player) sender).kickPlayer(C.IC + "It looks like your data went missing..." +
-                        "\nYou have been kicked to avoid further loss. \n\nJoin our Discord for support " + C.IV + Domain.DISCORD);
+                        "\nYou have been kicked to avoid further loss. \n\nJoin our Discord for support " + C.IV +
+                        plugin.getDomainProvider().get(Domain.DISCORD));
                 return false;
             }
 
-            if (!account.getRank().isHigherOrEqualTo(requiredRank)) {
+            if (!account.getStaffRank().isHigherOrEqualTo(requiredRank)) {
                 sender.sendMessage(M.noPerm(requiredRank));
                 return true;
             }

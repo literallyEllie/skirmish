@@ -69,7 +69,7 @@ public class CommandManager extends Module {
 
         // Micro commands
         registerCommands(new MicroCommand(plugin, "discord", Lists.newArrayList("dc"),
-                "You can join our Discord at " + C.V + Domain.DISCORD));
+                "You can join our Discord at " + C.V + plugin.getDomainProvider().get(Domain.DISCORD)));
     }
 
     @Override

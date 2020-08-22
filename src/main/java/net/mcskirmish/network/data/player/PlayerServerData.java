@@ -24,7 +24,7 @@ public class PlayerServerData {
     public PlayerServerData(Account account, ServerGroup group) {
         this(new Document(ID, account.getUuid())
                 .append(NAME, account.getName())
-                .append(RANK, account.getRank().name())
+                .append(RANK, account.getRank().id())
                 .append(SERVER, account.getLastServer())
                 .append(SERVER_GROUP, group.name())
                 .append(SERVER_LOGIN, System.currentTimeMillis()));

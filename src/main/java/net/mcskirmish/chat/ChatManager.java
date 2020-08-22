@@ -4,8 +4,8 @@ import net.mcskirmish.IInteractive;
 import net.mcskirmish.Module;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
 import net.mcskirmish.chat.command.CommandChat;
+import net.mcskirmish.rank.impl.StaffRank;
 import net.mcskirmish.util.C;
 import net.mcskirmish.util.P;
 import org.bukkit.ChatColor;
@@ -69,9 +69,9 @@ public class ChatManager extends Module implements IInteractive {
         event.setFormat(player.getDisplayName() + ChatColor.DARK_GRAY + ": " + ChatColor.RESET + " %2$s");
 
         // replace colors
-        if (account.getRank().isHigherOrEqualTo(Rank.ADMIN)) {
+        if (account.getStaffRank().isHigherOrEqualTo(StaffRank.ADMIN)) {
             event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
-        } else if (account.getRank().isHigherOrEqualTo(Rank.MODERATOR)) {
+        } else if (account.getStaffRank().isHigherOrEqualTo(StaffRank.MODERATOR)) {
             event.setMessage(event.getMessage().replaceAll(REGEX_COLOR.pattern(), ChatColor.COLOR_CHAR + "$1"));
         }
 

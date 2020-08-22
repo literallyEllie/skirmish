@@ -1,13 +1,16 @@
 package net.mcskirmish.account;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.mcskirmish.IInteractive;
+import net.mcskirmish.rank.impl.StaffRank;
 import net.mcskirmish.util.C;
 import org.bson.Document;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -22,6 +25,7 @@ public class Account {
             FIRST_TIME = "first_time",
             IPS = "ips",
             RANK = "rank",
+            STAFF_RANK = "staff_rank",
             LAST_USE = "last_use",
             DESTINATION_SERVER = "destination_server",
             LAST_SERVER = "last_server",
@@ -30,7 +34,8 @@ public class Account {
 
     private final AccountManager accountManager;
     private final Document document;
-    private final HashMap<String, Long> cooldowns;
+    private final Map<String, Long> cooldowns;
+
     private Player player;
 
     /**
@@ -45,7 +50,7 @@ public class Account {
     public Account(AccountManager accountManager, Document document) {
         this.accountManager = accountManager;
         this.document = document;
-        this.cooldowns = new HashMap<>();
+        this.cooldowns = Maps.newHashMap();
     }
 
     /**
@@ -58,7 +63,7 @@ public class Account {
      * - Empty list of previous names
      * - First login ({@link System#currentTimeMillis()})
      * - Singleton list of their connected IP
-     * - Their rank as {@link Rank#PLAYER}
+     * - Their rank as {@link StaffRank#NONE}
      *
      * @param accountManager account manager instance
      * @param uuid           the uuid of the player
@@ -73,7 +78,7 @@ public class Account {
                 .append(PREV_NAMES, Lists.newArrayList())
                 .append(FIRST_LOGIN, System.currentTimeMillis())
                 .append(IPS, Lists.newArrayList(ip))
-                .append(RANK, Rank.PLAYER.name());
+                .append(STAFF_RANK, StaffRank.NONE.name());
         return new Account(accountManager, document);
     }
 
@@ -110,7 +115,7 @@ public class Account {
 
     public void setPlayer(Player player) {
         this.player = player;
-        setDisplay();
+        updateDisplayName();
     }
 
     public UUID getUuid() {
@@ -149,28 +154,46 @@ public class Account {
         return document.getList(IPS, String.class);
     }
 
-    public Rank getRank() {
+    /**
+     * Implement me!
+     *
+     * @return the primary rank of the player
+     */
+    public net.mcskirmish.rank.IRank getRank() {
+        return getStaffRank();
+    }
+
+    /**
+     * Implement me!
+     *
+     * @param rank the new primary rank of the player
+     */
+    public void setRank(net.mcskirmish.rank.IRank rank) {
+        setStaffRank(rank);
+    }
+
+    public StaffRank getStaffRank() {
         try {
-            return Rank.valueOf(document.getString(RANK));
+            return StaffRank.valueOf(document.getString(STAFF_RANK));
         } catch (IllegalArgumentException e) {
-            System.out.println(getUuid() + " has invalid rank (" + document.getString(RANK) + ")");
-            setRank(Rank.PLAYER);
+            System.out.println(getUuid() + " has invalid staff rank (" + document.getString(STAFF_RANK) + ")");
+            setStaffRank(StaffRank.NONE);
         }
 
-        return Rank.PLAYER;
+        return StaffRank.NONE;
     }
 
-    public void setRank(Rank rank) {
-        set(RANK, rank.name());
-        setDisplay();
+    public void setStaffRank(net.mcskirmish.rank.IRank rank) {
+        set(STAFF_RANK, rank.id());
+        updateDisplayName();
     }
 
-    public void setDisplay() {
+    public void updateDisplayName() {
         if (player == null)
             return;
-        final Rank rank = getRank();
+        final net.mcskirmish.rank.IRank rank = getRank();
 
-        player.setDisplayName(rank.getPrefix() + (rank.isDefault() ? "" : " ") + getName());
+        player.setDisplayName(rank.getPrefix() + " " + getName());
     }
 
     public String getDestinationServer() {

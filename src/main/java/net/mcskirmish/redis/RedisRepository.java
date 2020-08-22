@@ -1,15 +1,10 @@
 package net.mcskirmish.redis;
 
-import com.google.gson.stream.JsonReader;
-import net.mcskirmish.util.UtilJson;
+import org.bukkit.configuration.file.FileConfiguration;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class RedisRepository {
@@ -20,27 +15,26 @@ public class RedisRepository {
      * Represents the redis repository of a database.
      * Uses to get a connection to Redis
      *
-     * @param credentialsFile the file to load credentials from
+     * @param configuration the file to load credentials from
      */
-    public RedisRepository(File credentialsFile) {
-        final Map<String, String> values = readConfig(credentialsFile);
-        if (values != null) {
-            JedisPoolConfig config = new JedisPoolConfig();
-            config.setMaxWaitMillis(1000L);
-            config.setMinIdle(200);
-            config.setMaxWaitMillis(300);
-            config.setTestOnBorrow(false);
-            config.setTestOnReturn(true);
+    public RedisRepository(FileConfiguration configuration) {
+        JedisPoolConfig config = new JedisPoolConfig();
+        config.setMaxWaitMillis(1000L);
+        config.setMinIdle(200);
+        config.setMaxWaitMillis(300);
+        config.setTestOnBorrow(false);
+        config.setTestOnReturn(true);
 
-            if (values.containsKey("auth")) {
-                pool = new JedisPool(config, values.get("host"), Integer.parseInt(values.get("port")),
-                        2000, values.get("auth"));
-            } else {
-                pool = new JedisPool(config, values.get("host"), Integer.parseInt(values.get("port")));
-            }
-
-        } else
-            pool = null;
+        if (configuration.isString("redis.auth")) {
+            pool = new JedisPool(config, configuration.getString("redis.host"),
+                    configuration.getInt("redis.port"),
+                    2000,
+                    configuration.getString("redis.auth"));
+        } else {
+            pool = new JedisPool(config,
+                    configuration.getString("redis.auth"),
+                    configuration.getInt("port"));
+        }
 
     }
 
@@ -52,15 +46,6 @@ public class RedisRepository {
         try (Jedis resource = pool.getResource()) {
             consumer.accept(resource);
         }
-    }
-
-    private Map<String, String> readConfig(File file) {
-        try (JsonReader jsonReader = new JsonReader(new FileReader(file))) {
-            return UtilJson.fromConfig(jsonReader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 }

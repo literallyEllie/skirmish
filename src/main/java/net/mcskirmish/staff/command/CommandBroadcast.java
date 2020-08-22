@@ -4,8 +4,8 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import net.mcskirmish.SkirmishPlugin;
 import net.mcskirmish.account.Account;
-import net.mcskirmish.account.Rank;
 import net.mcskirmish.command.Command;
+import net.mcskirmish.rank.impl.StaffRank;
 import net.mcskirmish.util.C;
 import net.mcskirmish.util.UtilServer;
 import org.bukkit.ChatColor;
@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
 public class CommandBroadcast extends Command {
 
     public CommandBroadcast(SkirmishPlugin plugin) {
-        super(plugin, "Broadcast", "Broadcast a message locally.", Rank.ADMIN, Lists.newArrayList("bc"), "<message>");
+        super(plugin, "Broadcast", "Broadcast a message locally.", StaffRank.ADMIN, Lists.newArrayList("bc"), "<message>");
     }
 
     @Override

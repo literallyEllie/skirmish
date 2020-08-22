@@ -34,7 +34,7 @@ public class RedisAccountSynchronizer extends RedisSubscriber<RedisAccountUpdate
      * Alternatively, only have this sync for some native {@link Account} fields which can be parsed easily,
      * like primitive types and enum constants.
      * <p>
-     * {@link Account#getRank()} is the most important anyway.
+     * {@link Account#getStaffRank()} is the most important anyway.
      *
      * @param plugin the plugin instance
      * @param parent account manager instance.

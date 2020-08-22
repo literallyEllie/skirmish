@@ -1,17 +1,17 @@
 package net.mcskirmish.staff;
 
-import net.mcskirmish.account.Rank;
+import net.mcskirmish.rank.impl.StaffRank;
 import org.bukkit.ChatColor;
 
 public enum StaffChannel {
 
-    STAFF(ChatColor.AQUA + ChatColor.BOLD.toString(), Rank.ADMIN),
-    ADMIN(ChatColor.RED + ChatColor.BOLD.toString(), Rank.ADMIN);
+    STAFF(ChatColor.AQUA + ChatColor.BOLD.toString(), StaffRank.ADMIN),
+    ADMIN(ChatColor.RED + ChatColor.BOLD.toString(), StaffRank.ADMIN);
 
-    private final Rank required;
+    private final StaffRank required;
     private final String prefix;
 
-    StaffChannel(String prefix, Rank requiredRank) {
+    StaffChannel(String prefix, StaffRank requiredRank) {
         this.required = requiredRank;
         this.prefix = prefix + name() + " ";
     }
@@ -20,7 +20,7 @@ public enum StaffChannel {
         return prefix;
     }
 
-    public Rank getRequired() {
+    public StaffRank getRequired() {
         return required;
     }
 

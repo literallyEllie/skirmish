@@ -1,6 +1,6 @@
 package net.mcskirmish.util;
 
-import net.mcskirmish.account.Rank;
+import net.mcskirmish.rank.IRank;
 
 public class M {
 
@@ -15,7 +15,7 @@ public class M {
     M() {
     }
 
-    public static String noPerm(Rank required) {
+    public static String noPerm(IRank required) {
         return NO_PERM + " You need " + required.getPrefix() + C.IC + "+";
     }
 
